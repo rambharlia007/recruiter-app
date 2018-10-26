@@ -1,0 +1,21 @@
+.login-padding {
+  padding-top: 150px;
+}
+
+.logo {
+  float: left;
+  max-width: 350px !important;
+  max-height: 50px !important;
+}
+
+.div-logo {
+  margin-bottom: 20px;
+  float: left;
+  max-width: 350px !important;
+  max-height: 50px !important;
+}
+
+.btn-success {
+  background-color: #f4917c !important;
+  border-color: #f4917c !important;
+}

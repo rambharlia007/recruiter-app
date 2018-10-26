@@ -1,0 +1,71 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  background-color: #eeee !important;
+}
+
+.ReactTable {
+  background-color: white;
+  font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif !important;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.custom-datatable {
+  background-color: white;
+  font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif !important;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.rt-resizable-header-content {
+  font-weight: bold;
+}
+.-header {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+.list-group-item.active {
+  z-index: 2;
+  color: #f8f9fa;
+  background-color: #929da7 !important;
+  border-color: #929da7 !important;
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type="file"] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
+}
+
+.btn-default {
+  background-color: #2bbbad !important;
+  color: #fff !important;
+}
+
+.btn-secondary-1 {
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
