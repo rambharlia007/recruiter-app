@@ -4,20 +4,9 @@ import { Redirect } from "react-router";
 import AuthService from "../services/auth";
 import axios from "axios";
 
-import GoogleLogin from 'react-google-login';
-import FacebookLogin from 'react-facebook-login';
-
-const responseFacebook = (response) => {
-  console.log(response);
-}
-
-let x = {
-  headers: {
-    "Access-Control-Allow-Origin": "*",
-    // "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-    // "Access-Control-Allow-Headers":'Origin, Content-Type, X-Auth-Token'
-  }
-}
+import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login";
+import decode from "jwt-decode";
 
 class Login extends Component {
   state = { userName: "", password: "", isUserLoggedIn: false };
@@ -42,21 +31,44 @@ class Login extends Component {
     });
   };
 
+  setTokenAndRoles = data => {
+    var user = decode(data.token);
+    this.auth.setLocalStorageData("role", user.role);
+    this.auth.setLocalStorageData("token", data.token);
+    this.props.authenticateCallBack(true);
+  };
 
-  AuthenticateByGoogle = () => {
-    axios.get('http://localhost:5000/auth/google')
-      .then(function (response) {
-        console.log(response);
+  AuthenticateSocial = payload => {
+    var self = this;
+    axios
+      .post("/auth/login", payload)
+      .then(function(response) {
+        self.setTokenAndRoles(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
-  }
+  };
 
+  responseGoogle = response => {
+    var user = {
+      userName: response.profileObj.name,
+      emailId: response.profileObj.email,
+      socialId: response.profileObj.googleId,
+      imageUrl: response.profileObj.imageUrl
+    };
+    this.AuthenticateSocial(user);
+  };
 
-  responseGoogle = (response) => {
+  responseFacebook = response => {
+    var user = {
+      userName: response.name,
+      emailId: response.email,
+      socialId: response.userID
+    };
     console.log(response);
-  }
+    this.AuthenticateSocial(user);
+  };
 
   render() {
     if (this.props.isAuthenticated) {
@@ -98,7 +110,9 @@ class Login extends Component {
                   <button
                     type="submit"
                     class="btn btn-success btn-block text-left"
-                    onClick={() => { this.Authenticate() }}
+                    onClick={() => {
+                      this.Authenticate();
+                    }}
                     disabled={!(this.state.userName && this.state.password)}
                   >
                     <span class="pull-left">
@@ -114,16 +128,20 @@ class Login extends Component {
               <GoogleLogin
                 clientId="225239235499-2kcl83lbn7tdga1rhahkg62k5qm9i1ii.apps.googleusercontent.com"
                 buttonText="Login with Google"
-                onSuccess={this.responseGoogle}
+                onSuccess={data => {
+                  this.responseGoogle(data);
+                }}
                 onFailure={this.responseGoogle}
               />
             </div>
             <div className="col-md-12 pt15 pl0">
               <FacebookLogin
                 appId="697493127302600"
-                autoLoad={true}
+                autoLoad={false}
                 fields="name,email,picture"
-                callback={responseFacebook}
+                callback={data => {
+                  this.responseFacebook(data);
+                }}
                 cssClass="btn-facebook"
                 icon="fa-facebook"
                 size="btn-lg"

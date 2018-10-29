@@ -1,0 +1,30 @@
+import decode from "jwt-decode";
+export default class CommonService {
+  isTokenExpired() {
+    try {
+      const token = this.getLocalStorageData("token");
+      const decoded = decode(token);
+      if (decoded.exp < Date.now() / 1000) {
+        localStorage.removeItem("token");
+        window.location.href = "";
+      } else return false;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  setLocalStorageData(key, value) {
+    // Saves user token to localStorage
+    localStorage.setItem(key, value);
+  }
+
+  getLocalStorageData(key) {
+    // Retrieves the user token from localStorage
+    return localStorage.getItem(key);
+  }
+  getTokenHeader() {
+    return {
+      Authorization: `Bearer ${this.getLocalStorageData("token")}`
+    };
+  }
+}

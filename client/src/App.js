@@ -29,7 +29,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    if (authService.getLocalStorageData("id_token")) {
+    if (authService.getLocalStorageData("token")) {
       this.setState({ isAuthenticated: true });
     }
   }

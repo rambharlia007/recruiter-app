@@ -1,41 +1,54 @@
 import React, { Component } from "react";
 import "datatables.net-dt/css/jquery.dataTables.min.css";
 import "datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css";
+import CommonService from "../../services/common";
 var $ = require("jquery");
 require("datatables.net");
 require("datatables.net-fixedheader-dt");
 
 class datatabletest extends Component {
+  constructor() {
+    super();
+    this.common = new CommonService();
+  }
   componentDidMount() {
-    $(this.refs.main).DataTable({
-      ajax: {
-        url: "http://localhost:3500/applicant",
-        dataSrc: function(json) {
-          return json;
-        }
-      },
-      fixedHeader: {
-        header: true,
-        footer: true
-      },
-      columns: [
-        {
-          data: "name",
-          render: function(data, type, row, meta) {
-            return `<span><a href="${
-              window.location.origin
-            }/new/process/${data}">${data}</a></span>`;
+    if (this.common.isTokenExpired()) alert("Token expired");
+    else {
+      $(this.refs.main).DataTable({
+        ajax: {
+          url: "http://localhost:5000/protected",
+          type: "GET",
+          headers: this.common.getTokenHeader(),
+          dataSrc: function(json) {
+            return json;
+          },
+          error: function(xhr, error) {
+            if (xhr.status == 401) alert("Unauthorised user");
           }
         },
-        { data: "recruiter" },
-        { data: "totalExperience" },
-        { data: "organisation" },
-        { data: "designation" },
-        { data: "skillSet" },
-        { data: "minNoticePeriod" }
-      ],
-      lengthMenu: [[15, 20, 25, 30, 100], [15, 20, 25, 30, 100]]
-    });
+        fixedHeader: {
+          header: true,
+          footer: true
+        },
+        columns: [
+          {
+            data: "name",
+            render: function(data, type, row, meta) {
+              return `<span><a href="${
+                window.location.origin
+              }/new/process/${data}">${data}</a></span>`;
+            }
+          },
+          { data: "recruiter" },
+          { data: "totalExperience" },
+          { data: "organisation" },
+          { data: "designation" },
+          { data: "skillSet" },
+          { data: "minNoticePeriod" }
+        ],
+        lengthMenu: [[15, 20, 25, 30, 100], [15, 20, 25, 30, 100]]
+      });
+    }
   }
   render() {
     return (

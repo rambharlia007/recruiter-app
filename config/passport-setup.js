@@ -1,14 +1,9 @@
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy
-const keys = require('./keys');
-
-
-
-passport.use(new GoogleStrategy({
-    clientID: keys.google.clientID,
-    clientSecret: keys.google.clientSecret,
-    callbackURL: "http://localhost:3000/list/applicant" // "/auth/google/redirect"
-}
-    , (accessToken, refreshToken, profile, done) => {
-        done(null, profile);
-    })) 
+const passport = require("passport");
+const JwtStrategy = require("passport-jwt").Strategy;
+const opts = require("../config/jwt-config");
+passport.use(
+  new JwtStrategy(opts.validateOptions, function(jwt_payload, done) {
+    console.log(jwt_payload);
+    return done(null, true);
+  })
+);
