@@ -14,13 +14,17 @@ router.get('/logout', (req, res) => {
 
 // auth with google+
 router.get('/google', passport.authenticate('google', {
+    session:false,
     scope: ['profile']
 }));
 
 // callback route for google to redirect to
 // hand control to passport to use code to grab profile info
-router.get('/google/redirect', passport.authenticate('google'), (req, res) => {
-    res.send('you reached the redirect URI');
+router.get('/google/redirect', passport.authenticate('google', {
+    session: false
+}), (req, res) => {
+    console.log(res._parsedUrl)
+    res.send("res");
 });
 
 module.exports = router;
