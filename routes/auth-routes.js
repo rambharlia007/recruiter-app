@@ -11,6 +11,7 @@ router.post("/login", (req, res) => {
     socialId: data.socialId,
     imageUrl: data.imageUrl,
     emailId: data.emailId,
+    phoneNumber : data.phoneNumber,
     role: "public"
   };
   User.findOneAndUpdate(

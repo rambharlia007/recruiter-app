@@ -13,7 +13,7 @@ import AuthService from "./services/auth";
 import Applicant from "./components/List/Applicant";
 import Test from "./components/List/Test";
 import Process from "./components/New/Process";
-import datatabletest from "./components/List/datatabletest";
+import Profile from "./components/List/Profile";
 
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -92,9 +92,9 @@ class App extends Component {
               />
               <PrivateRoute
                 exact
-                path="/List/datatabletest"
+                path="/List/profile"
                 isAuthenticated={this.state.isAuthenticated}
-                component={datatabletest}
+                component={Profile}
               />
             </div>
           </main>

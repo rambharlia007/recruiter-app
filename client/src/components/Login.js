@@ -35,6 +35,8 @@ class Login extends Component {
     var user = decode(data.token);
     this.auth.setLocalStorageData("role", user.role);
     this.auth.setLocalStorageData("token", data.token);
+    this.auth.setLocalStorageData("name", user.username);
+    this.auth.setLocalStorageData("image", user.imageUrl);
     this.props.authenticateCallBack(true);
   };
 
@@ -55,7 +57,8 @@ class Login extends Component {
       userName: response.profileObj.name,
       emailId: response.profileObj.email,
       socialId: response.profileObj.googleId,
-      imageUrl: response.profileObj.imageUrl
+      imageUrl: response.profileObj.imageUrl,
+      phoneNumber: ''
     };
     this.AuthenticateSocial(user);
   };
@@ -64,7 +67,9 @@ class Login extends Component {
     var user = {
       userName: response.name,
       emailId: response.email,
-      socialId: response.userID
+      socialId: response.userID,
+      imageUrl:response.picture.data.url,
+      phoneNumber: ''
     };
     console.log(response);
     this.AuthenticateSocial(user);

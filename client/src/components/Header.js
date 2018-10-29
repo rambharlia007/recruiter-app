@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Link } from "react-router-dom";
 import Route from "react-router-dom/Route";
+import CommonService from "../services/common";
 import {
   Container,
   Navbar,
@@ -20,8 +21,14 @@ class Header extends Component {
     this.state = {
       collapse: false
     };
+    this.commonService = new CommonService();
     this.onClick = this.onClick.bind(this);
   }
+
+logout = ()=>{
+   this.commonService.removeLocalStorageData();
+   window.location.reload();
+}
 
   onClick() {
     this.setState({
@@ -34,40 +41,37 @@ class Header extends Component {
       <header>
         <Navbar style={bgPink} dark expand="md" scrolling fixed="top">
           <NavbarBrand href="/">
-            <strong>Navbar</strong>
+            <strong>DevOn</strong>
           </NavbarBrand>
           <NavbarToggler onClick={this.onClick} />
           <Collapse isOpen={this.state.collapse} navbar>
             <NavbarNav left>
-              <NavItem active>
+              <NavItem>
                 <NavLink to="/list/applicant">Applicant</NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink to="#">Features</NavLink>
+              <NavItem >
+                <NavLink to="/new/applicant">New Applicant</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="#">Pricing</NavLink>
+                <NavLink to="/list/profile">User</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink to="#">Options</NavLink>
+                <NavLink to="#" onClick={()=>{
+                   this.logout();
+                }}>
+                 Logout
+                </NavLink>
               </NavItem>
             </NavbarNav>
+            
             <NavbarNav right>
-              <NavItem>
-                <NavLink to="#">
-                  <Fa icon="facebook" />
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="#">
-                  <Fa icon="twitter" />
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink to="#">
-                  <Fa icon="instagram" />
-                </NavLink>
-              </NavItem>
+            <NavItem>
+              <NavLink to="#">
+              <img style={{width:35, height:25, paddingRight:5}} src={this.commonService.getLocalStorageData("image")} class="img-circle" alt=""></img>
+               Logged in as {this.commonService.getLocalStorageData("name")}
+              </NavLink>
+            </NavItem>
+             
             </NavbarNav>
           </Collapse>
         </Navbar>

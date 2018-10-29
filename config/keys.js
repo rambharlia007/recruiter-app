@@ -6,6 +6,6 @@ module.exports = {
   },
   mongodb: {
     dbURI:
-      "mongodb+srv://rambharlia:11gaei5034@cluster0-rjpcq.mongodb.net/test?retryWrites=true"
+      "mongodb+srv://rambharlia:11gaei5034@cluster0-rjpcq.mongodb.net/recruiter-app?retryWrites=true"
   }
 };

@@ -11,6 +11,8 @@ const cors = require("cors");
 const dummy = require("./dummy.json");
 const app = express();
 
+const User = require("./models/user-model");
+
 app.use(cors());
 
 // initialize passport
@@ -19,9 +21,9 @@ app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-mongoose
+mongoose 
   .connect(
-    "mongodb+srv://rambharlia:11gaei5034@resume-builder-rcgyu.mongodb.net/test?retryWrites=true",
+   keys.mongodb.dbURI,
     { useNewUrlParser: true }
   )
   .then(() => console.log("MongoDB Connected"))
@@ -44,10 +46,34 @@ app.get(
   }
 );
 
-app.get("/datatable", (req, res) => {
-  console.log("In protected method");
-  return res.status(200).send(dummy.applicant);
-});
+app.get(
+  "/user",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+     User.find({}, function(err, users){
+        if(err)
+        res.status(500).send("Internal server error");
+        else{
+          res.status(200).send(users);
+        }
+     })
+  }
+);
+
+app.get(
+  "/user/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+     User.findById(req.params.id, function(err, users){
+        if(err)
+        res.status(500).send("Internal server error");
+        else{
+          res.status(200).send(users);
+        }
+     })
+  }
+);
+
 
 app.listen(5000, () => {
   console.log("app now listening for requests on port 5000");
