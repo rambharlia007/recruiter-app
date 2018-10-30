@@ -21,9 +21,9 @@ app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-mongoose 
+mongoose
   .connect(
-   keys.mongodb.dbURI,
+    keys.mongodb.dbURI,
     { useNewUrlParser: true }
   )
   .then(() => console.log("MongoDB Connected"))
@@ -50,13 +50,12 @@ app.get(
   "/user",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-     User.find({}, function(err, users){
-        if(err)
-        res.status(500).send("Internal server error");
-        else{
-          res.status(200).send(users);
-        }
-     })
+    User.find({}, function(err, users) {
+      if (err) res.status(500).send("Internal server error");
+      else {
+        res.status(200).send(users);
+      }
+    });
   }
 );
 
@@ -64,16 +63,27 @@ app.get(
   "/user/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-     User.findById(req.params.id, function(err, users){
-        if(err)
-        res.status(500).send("Internal server error");
-        else{
-          res.status(200).send(users);
-        }
-     })
+    User.findById(req.params.id, function(err, users) {
+      if (err) res.status(500).send("Internal server error");
+      else {
+        res.status(200).send(users);
+      }
+    });
   }
 );
 
+app.patch(
+  "/user/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.findByIdAndUpdate(req.params.id, req.body, function(err, users) {
+      if (err) res.status(500).send("Internal server error");
+      else {
+        res.status(200).send(users);
+      }
+    });
+  }
+);
 
 app.listen(5000, () => {
   console.log("app now listening for requests on port 5000");

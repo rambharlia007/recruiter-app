@@ -11,8 +11,8 @@ router.post("/login", (req, res) => {
     socialId: data.socialId,
     imageUrl: data.imageUrl,
     emailId: data.emailId,
-    phoneNumber : data.phoneNumber,
-    role: "public"
+    phoneNumber: data.phoneNumber
+    //  role: data.role
   };
   User.findOneAndUpdate(
     { emailId: data.emailId },
@@ -20,14 +20,14 @@ router.post("/login", (req, res) => {
     {
       upsert: true,
       new: true,
-      overwrite: true
+      overwrite: false
     },
     function(err, user) {
       if (err) {
         console.log(err);
         return res.status(500).send("Internal server error");
       } else {
-        console.log(user);
+        curentUser.role = user.role;
         const token = jwt.sign(
           curentUser,
           opts.secretOrKey,

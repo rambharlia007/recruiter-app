@@ -5,6 +5,7 @@ import Route from "react-router-dom/Route";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   var isAuthenticated = { ...rest }.isAuthenticated;
+  var isAdmin = { ...rest }.isAdmin;
   return (
     <Route
       {...rest}

@@ -9,7 +9,7 @@ import Route from "react-router-dom/Route";
 import Interviewee from "./components/New/Interviewee";
 import { Redirect } from "react-router";
 import PrivateRoute from "./components/PrivateRoute";
-import AuthService from "./services/auth";
+import CommonService from "./services/common";
 import Applicant from "./components/List/Applicant";
 import Test from "./components/List/Test";
 import Process from "./components/New/Process";
@@ -20,16 +20,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 
-var authService = new AuthService();
+var commonService = new CommonService();
 
 class App extends Component {
-  state = { isAuthenticated: false };
+  state = { isAuthenticated: false, isAdmin: false };
   constructor(props) {
     super(props);
   }
 
   componentWillMount() {
-    if (authService.getLocalStorageData("token")) {
+    if (commonService.getLocalStorageData("token")) {
       this.setState({ isAuthenticated: true });
     }
   }
@@ -43,7 +43,6 @@ class App extends Component {
       <Router>
         <div>
           {this.state.isAuthenticated && <Header />}
-
           <Route
             path="/login"
             exact
@@ -76,13 +75,8 @@ class App extends Component {
                 exact
                 path="/list/applicant"
                 isAuthenticated={this.state.isAuthenticated}
+                isAdmin={this.state.isAdmin}
                 component={Applicant}
-              />
-              <PrivateRoute
-                exact
-                path="/list/test"
-                isAuthenticated={this.state.isAuthenticated}
-                component={Test}
               />
               <PrivateRoute
                 exact
@@ -94,6 +88,7 @@ class App extends Component {
                 exact
                 path="/List/profile"
                 isAuthenticated={this.state.isAuthenticated}
+                isAdmin={this.state.isAdmin}
                 component={Profile}
               />
             </div>

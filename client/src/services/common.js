@@ -5,15 +5,20 @@ export default class CommonService {
       const token = this.getLocalStorageData("token");
       const decoded = decode(token);
       if (decoded.exp < Date.now() / 1000) {
-        this.removeLocalStorageData()
+        this.removeLocalStorageData();
       } else return false;
     } catch (err) {
       return false;
     }
   }
 
+  isAdmin() {
+    var role = this.getLocalStorageData("role");
+    return role == "admin" || role == "super_admin";
+  }
+
   removeLocalStorageData() {
-    localStorage.removeItem("token");
+    localStorage.clear();
   }
 
   setLocalStorageData(key, value) {
