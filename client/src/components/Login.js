@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Login.css";
 import { Redirect } from "react-router";
-import AuthService from "../services/auth";
+import CommonService from "../services/common";
 import axios from "axios";
 
 import GoogleLogin from "react-google-login";
@@ -13,7 +13,7 @@ class Login extends Component {
 
   constructor(props) {
     super(props);
-    this.auth = new AuthService();
+    this.commonService = new CommonService();
   }
 
   HandleInputChange = event => {
@@ -45,23 +45,24 @@ class Login extends Component {
 
   Authenticate = () => {
     var self = this;
-    this.auth.login().then(data => {
-      self.setState({ isUserLoggedIn: true });
-      self.props.authenticateCallBack(true);
-    });
+    // this.auth.login().then(data => {
+    //   self.setState({ isUserLoggedIn: true });
+    //   self.props.authenticateCallBack(true);
+    // });
   };
 
   setTokenAndRoles = data => {
     var user = decode(data.token);
-    this.auth.setLocalStorageData("role", user.role);
-    this.auth.setLocalStorageData("token", data.token);
-    this.auth.setLocalStorageData("name", user.username);
-    this.auth.setLocalStorageData("image", user.imageUrl);
+    this.commonService.setLocalStorageData("role", user.role);
+    this.commonService.setLocalStorageData("token", data.token);
+    this.commonService.setLocalStorageData("name", user.username);
+    this.commonService.setLocalStorageData("image", user.imageUrl);
     this.props.authenticateCallBack(true);
   };
 
   AuthenticateSocial = payload => {
     var self = this;
+    payload.role = this.common;
     axios
       .post("/auth/login", payload)
       .then(function(response) {
@@ -78,7 +79,7 @@ class Login extends Component {
       emailId: response.profileObj.email,
       socialId: response.profileObj.googleId,
       imageUrl: response.profileObj.imageUrl,
-      phoneNumber: ''
+      phoneNumber: ""
     };
     this.AuthenticateSocial(user);
   };
@@ -88,18 +89,19 @@ class Login extends Component {
       userName: response.name,
       emailId: response.email,
       socialId: response.userID,
-      imageUrl:response.picture.data.url,
-      phoneNumber: ''
+      imageUrl: response.picture.data.url,
+      phoneNumber: ""
     };
     console.log(response);
     this.AuthenticateSocial(user);
   };
 
   render() {
-    if (this.props.isAuthenticated) {
+    if (this.props.isAuthenticated && this.commonService.isAdmin()) {
       return <Redirect to="/list/applicant" />;
+    } else if (this.props.isAuthenticated) {
+      return <Redirect to="/new/applicant" />;
     }
-
     return (
       <div class="login-padding">
         <div class="row justify-content-center">

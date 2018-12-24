@@ -6,8 +6,8 @@ var $ = require("jquery");
 require("datatables.net");
 
 class Applicant extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.common = new CommonService();
   }
   componentDidMount() {
@@ -50,50 +50,55 @@ class Applicant extends Component {
     }
   }
   render() {
-    return (
-      <div className="row justify-content-md-center">
-        <div className="col-md-6">
-          <p className="h4 text-left" style={{ paddingTop: "15px" }}>
-            Applicant grid
-          </p>
-        </div>
-        <div className="col-md-6">
-          <button
-            type="button"
-            className="btn btn-default pull-right"
-            onClick={() => {
-              this.props.history.replace("/new/applicant");
-            }}
-          >
-            Create New Applicant
-          </button>
-        </div>
+    if (!this.common.isAdmin()) {
+      alert("you don't have permission to access this page");
+      return null;
+    } else {
+      return (
+        <div className="row justify-content-md-center">
+          <div className="col-md-6">
+            <p className="h4 text-left" style={{ paddingTop: "15px" }}>
+              Applicant grid
+            </p>
+          </div>
+          <div className="col-md-6">
+            <button
+              type="button"
+              className="btn btn-default pull-right"
+              onClick={() => {
+                this.props.history.replace("/new/applicant");
+              }}
+            >
+              Create New Applicant
+            </button>
+          </div>
 
-        <div className="col-md-12">
-          <div className="card">
-            <div className="card-body">
-              <table
-                ref="main"
-                className="display custom-datatable"
-                style={{ width: "100%" }}
-              >
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Recruiter</th>
-                    <th>Experience</th>
-                    <th>Organisation</th>
-                    <th>Designation</th>
-                    <th>Skills</th>
-                    <th>NoticePeriod</th>
-                  </tr>
-                </thead>
-              </table>{" "}
+          <div className="col-md-12">
+            <div className="card">
+              <div className="card-body">
+                <table
+                  ref="main"
+                  className="display custom-datatable"
+                  style={{ width: "100%" }}
+                >
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Recruiter</th>
+                      <th>Experience</th>
+                      <th>Organisation</th>
+                      <th>Designation</th>
+                      <th>Skills</th>
+                      <th>NoticePeriod</th>
+                    </tr>
+                  </thead>
+                </table>{" "}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 

@@ -8,7 +8,6 @@ import TechnicalRound from "../Common/TechnicalRound";
 
 const roundType = {
   fitmentEvaluationRound: 1,
-
   tech1: 2,
   tech2: 3,
   codeEvaluationRound: 4,
@@ -27,6 +26,15 @@ class Process extends Component {
     };
   }
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
+  }
+
   render() {
     return (
       <div className="row justify-content-md-center">
@@ -36,13 +44,26 @@ class Process extends Component {
               <form>
                 <div class="form-group">
                   <label>Next round</label>
-                  <select class="form-control">
-                    <option>Technical round 1</option>
-                    <option>Technical round 2</option>
-                    <option>Code evaluation</option>
-                    <option>Presentation round</option>
-                    <option>CDL Evaluation</option>
-                    <option>Managing Director Evaluation</option>
+                  <select
+                    class="form-control"
+                    name="currentRoundType"
+                    value={this.state.currentRoundType}
+                    onChange={e => {
+                      this.handleInputChange(e);
+                    }}
+                  >
+                    <option value={roundType.tech1}>Technical round 1</option>
+                    <option value={roundType.tech2}>Technical round 2</option>
+                    <option value={roundType.codeEvaluationRound}>
+                      Code evaluation
+                    </option>
+                    <option value={roundType.fitmentEvaluationRound}>
+                      Presentation round
+                    </option>
+                    <option value={roundType.cdlRound}>CDL Evaluation</option>
+                    <option value={roundType.mdRound}>
+                      Managing Director Evaluation
+                    </option>
                   </select>
                 </div>
                 <div class="form-group">
@@ -68,6 +89,8 @@ class Process extends Component {
           {this.state.currentRoundType == roundType.fitmentEvaluationRound && (
             <FitmentEvaluationRound />
           )}
+          {this.state.currentRoundType == roundType.tech1 && <TechnicalRound />}
+          {this.state.currentRoundType == roundType.tech2 && <TechnicalRound />}
         </div>
       </div>
     );
