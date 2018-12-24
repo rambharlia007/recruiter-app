@@ -3,6 +3,8 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const opts = require("../config/jwt-config");
 const User = require("../models/user-model");
+//const goog = require("../config/passport-google-setup");
+
 // auth login
 router.post("/login", (req, res) => {
   let data = req.body;

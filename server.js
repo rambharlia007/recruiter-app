@@ -2,6 +2,7 @@ const express = require("express");
 const authRoutes = require("./routes/auth-routes");
 const passport = require("passport");
 const passportSetup = require("./config/passport-setup");
+const xx = require("./config/passport-google-setup");
 const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const bodyParser = require("body-parser");
@@ -20,6 +21,7 @@ app.use(passport.initialize());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
 
 mongoose 
   .connect(
