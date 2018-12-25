@@ -10,6 +10,12 @@ body {
   background-color: #eeee !important;
 }
 
+.btn-secondary {
+  color: #fff !important;
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
+
 .ReactTable {
   background-color: white;
   font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif !important;
@@ -68,4 +74,43 @@ body {
 .btn-secondary-1 {
   background-color: #6c757d !important;
   border-color: #6c757d !important;
+}
+.badge-secondary1{
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
+.btn-secondary {
+  color: #fff !important;
+  background-color: #6c757d !important;
+  border-color: #6c757d !important;
+}
+
+.custom-div{
+  border: 1px solid #ced4da;
+  padding: 10px;
+}
+
+.mr5{
+  margin-right: 5px !important;
+}
+.mb5{
+  margin-bottom: 5px !important;
+}
+
+.pb10{
+  padding-bottom: 10px !important;
+}
+
+.bg-grey{
+  background: #929da721 !important;
+}
+
+.badge-secondary1 {
+  color: #fff;
+  background-color: #6c757d;
+}
+
+.div-disable{
+    pointer-events: none;
+    opacity: 0.4;
 }

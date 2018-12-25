@@ -37,7 +37,8 @@ router.post("/login", (req, res) => {
         );
         return res.status(200).json({
           message: "Auth Passed",
-          token
+          token,
+          id:user._id
         });
       }
     }

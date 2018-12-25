@@ -88,7 +88,7 @@ class App extends Component {
                 exact
                 path="/List/profile"
                 isAuthenticated={this.state.isAuthenticated}
-                isAdmin={this.state.isAdmin}
+                isAdmin = {this.state.isAdmin}
                 component={Profile}
               />
             </div>

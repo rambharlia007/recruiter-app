@@ -57,6 +57,7 @@ class Login extends Component {
     this.commonService.setLocalStorageData("token", data.token);
     this.commonService.setLocalStorageData("name", user.username);
     this.commonService.setLocalStorageData("image", user.imageUrl);
+    this.commonService.setLocalStorageData("id", data.id);
     this.props.authenticateCallBack(true);
   };
 
