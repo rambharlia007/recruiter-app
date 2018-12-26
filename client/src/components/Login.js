@@ -23,25 +23,24 @@ class Login extends Component {
     });
   };
 
-  AuthenticatePassport = ()=>{
-
+  AuthenticatePassport = () => {
     //window.open("http://localhost:5000/auth/google","_self");
     let headers = {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "http://localhost:5000",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE",
       "Access-Control-Allow-Headers": "X-Requested-With,content-type",
-      "Access-Control-Allow-Credentials": true,
-  }
+      "Access-Control-Allow-Credentials": true
+    };
     axios
-    .get("http://localhost:5000/auth/google", headers)
-    .then(function(response) {
-      console.log(response);
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-  }
+      .get("http://localhost:5000/auth/google", headers)
+      .then(function(response) {
+        console.log(response);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   Authenticate = () => {
     var self = this;
@@ -65,7 +64,7 @@ class Login extends Component {
     var self = this;
     payload.role = this.common;
     axios
-      .post("/auth/login", payload)
+      .post("http://localhost:5000/auth/login", payload)
       .then(function(response) {
         self.setTokenAndRoles(response.data);
       })
@@ -176,18 +175,18 @@ class Login extends Component {
               />
             </div>
             <button
-                    type="submit"
-                    class="btn btn-success btn-block text-left"
-                    onClick={() => {
-                      this.AuthenticatePassport();
-                    }}
-                  >
-                    <span class="pull-left">
-                      {/* <i class="fa fa-lock" /> */}
-                     Passport
-                    </span>
-                    {/* <i class="fa fa-lg fa-spinner fa-spin pull-right" /> */}
-                  </button>
+              type="submit"
+              class="btn btn-success btn-block text-left"
+              onClick={() => {
+                this.AuthenticatePassport();
+              }}
+            >
+              <span class="pull-left">
+                {/* <i class="fa fa-lock" /> */}
+                Passport
+              </span>
+              {/* <i class="fa fa-lg fa-spinner fa-spin pull-right" /> */}
+            </button>
           </div>
         </div>
       </div>

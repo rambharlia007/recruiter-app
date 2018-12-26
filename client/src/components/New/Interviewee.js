@@ -3,6 +3,7 @@ import Header from "../../components/Header";
 import $ from "jquery";
 import Axios from "axios";
 import "bootstrap/dist/js/bootstrap.min.js";
+import axios from "axios";
 import {
   Container,
   Row,
@@ -79,11 +80,35 @@ class TempForm extends Component {
         otherOffers: "No",
         minNoticePeriod: "2",
         maxNoticePeriod: "2",
-        recruiter: "Srini"
+        recruiter: "",
+        recruiterId: ""
       },
+      interviewers: [],
       activeTab: this.tabs[0]
     };
     this.handleInputChange = this.handleInputChange.bind(this);
+  }
+
+  componentDidMount() {
+    var self = this;
+    axios
+      .get(`http://localhost:5000/interviewer`)
+      .then(function(response) {
+        console.log(response.data);
+        self.setState({ interviewers: response.data });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+
+  setRecruiterName() {
+    var formData = this.state.formData;
+    var recruiterData = this.state.interviewers.filter(
+      e => e._id == formData.recruiterId
+    )[0];
+    formData.recruiter = recruiterData.username;
+    this.setState({ formData: formData });
   }
 
   submitApplicant = () => {
@@ -94,20 +119,9 @@ class TempForm extends Component {
     });
     var modalData = { title: "saving...", body: "Save in progress" };
     this.setState({ modalData: modalData });
-    var postData = [];
-
-    for (var i = 0; i < 10000; i++) {
-      let formData = { ...this.state.formData };
-      formData.name = faker.name.firstName();
-      formData.recruiter = faker.name.lastName();
-      formData.relevantExperience = faker.random.number();
-      formData.organisation = faker.company.companyName();
-      formData.designation = faker.name.title();
-      formData.maxNoticePeriod = faker.random.number();
-      formData.minNoticePeriod = faker.random.number();
-      postData.push(formData);
-    }
-    Axios.post("http://localhost:3500/applicant", postData)
+    this.setRecruiterName();
+    var postData = this.state.formData;
+    Axios.post("http://localhost:5000/applicant", postData)
       .then(response => {
         this.setState({
           modalData: { title: "Success", body: "saved successfully." }
@@ -454,15 +468,18 @@ class TempForm extends Component {
                           <div class="col-md-5">
                             <select
                               class="form-control form-control-sm"
-                              name="recruiter"
-                              value={formData.recruiter}
+                              name="recruiterId"
+                              value={formData.recruiterId}
                               onChange={this.handleInputChange}
                             >
-                              <option value="">select recruiter</option>
-                              <option value="Srini">Srini</option>
-                              <option value="Puneeth">Puneeth</option>
-                              <option value="Ram">Ram</option>
-                              <option value="Nidhin">Nidhin</option>
+                              <option>select interviewer</option>
+                              {this.state.interviewers.map((data, index) => {
+                                return (
+                                  <option value={data._id}>
+                                    {data.username}
+                                  </option>
+                                );
+                              })}
                             </select>
                           </div>
                         </div>

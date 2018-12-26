@@ -15,6 +15,7 @@
     "lodash": "^4.17.10",
     "mdbreact": "^4.6.1",
     "namor": "^1.0.1",
+    "query-string": "^6.2.0",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-facebook-login": "^4.1.1",

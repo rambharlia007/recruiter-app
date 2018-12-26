@@ -6,34 +6,45 @@ import "bootstrap/dist/js/bootstrap.min.js";
 class FitmentEvaluationRound extends Component {
   constructor(props) {
     super(props);
-    this.state = props.fitmentEvaluationRoundData
+    this.state = props.fitmentEvaluationRoundData;
   }
 
   render() {
     return (
-        this.state.isVisible && <div class="card">
-          <div class="card-body">
+      this.state.isVisible && (
+        <div class="card">
+          <div
+            className={
+              "card-body " + this.props.fitmentEvaluationRoundData.disableClass
+            }
+          >
             <h5 class="card-title">Fitment Evaluation Form</h5>
             <form>
               <div class="form-group">
-                <small class="form-text text-muted">What impressed you most about the candidate?</small>
+                <small class="form-text text-muted">
+                  What impressed you most about the candidate?
+                </small>
                 <textarea class="form-control" rows="2" />
               </div>
               <div class="form-group">
                 <small class="form-text text-muted">
                   What according to you, can the candidate improve on?
-            </small>
+                </small>
                 <textarea class="form-control" rows="2" />
               </div>
               <div class="form-group">
-                <small class="form-text text-muted">Would the candidate make a good fit at Prowareness?</small>
+                <small class="form-text text-muted">
+                  Would the candidate make a good fit at Prowareness?
+                </small>
                 <textarea class="form-control" rows="2" />
               </div>
               <div class="form-group">
                 <small class="form-text text-muted">Motivation factors</small>
                 <div class="form-check form-check-inline ">
                   <input class="form-check-input" type="checkbox" />
-                  <small class="form-text text-muted">Challenging work/Projects</small>
+                  <small class="form-text text-muted">
+                    Challenging work/Projects
+                  </small>
                 </div>
                 <div class="form-check form-check-inline ">
                   <input class="form-check-input" type="checkbox" />
@@ -43,7 +54,11 @@ class FitmentEvaluationRound extends Component {
                   <input class="form-check-input" type="checkbox" />
                   <small class="form-text text-muted">Financial aspect</small>
                 </div>
-                <textarea class="form-control" rows="2" placeholder="Comments" />
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  placeholder="Comments"
+                />
               </div>
 
               <div class="form-group">
@@ -55,15 +70,22 @@ class FitmentEvaluationRound extends Component {
                 </div>
                 <div class="form-check form-check-inline ">
                   <input class="form-check-input" type="checkbox" />
-                  <small class="form-text text-muted">Open source projects</small>
+                  <small class="form-text text-muted">
+                    Open source projects
+                  </small>
                 </div>
                 <div class="form-check form-check-inline ">
                   <input class="form-check-input" type="checkbox" />
-                  <small class="form-text text-muted"> Association with any Groups / Conferences</small>
+                  <small class="form-text text-muted">
+                    {" "}
+                    Association with any Groups / Conferences
+                  </small>
                 </div>
                 <div class="form-check form-check-inline ">
                   <input class="form-check-input" type="checkbox" />
-                  <small class="form-text text-muted">Technical Certifications</small>
+                  <small class="form-text text-muted">
+                    Technical Certifications
+                  </small>
                 </div>
                 <textarea
                   class="form-control"
@@ -81,22 +103,23 @@ class FitmentEvaluationRound extends Component {
                   aria-expanded="false"
                 >
                   Status
-              </button>
+                </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" href="#">
                     In progress
-                </a>
+                  </a>
                   <a class="dropdown-item" href="#">
                     Rejected
-                </a>
+                  </a>
                   <a class="dropdown-item" href="#">
                     Approved
-                </a>
+                  </a>
                 </div>
               </div>
             </form>
           </div>
         </div>
+      )
     );
   }
 }

@@ -33,9 +33,10 @@ class Applicant extends Component {
           {
             data: "name",
             render: function(data, type, row, meta) {
-              return `<span><a href="${
-                window.location.origin
-              }/new/process/${data}">${data}</a></span>`;
+              console.log(row);
+              return `<span><a href="${window.location.origin}/new/process?id=${
+                row._id
+              }&rid=${row.recruiterId}">${data}</a></span>`;
             }
           },
           { data: "recruiter" },
