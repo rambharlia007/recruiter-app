@@ -17,6 +17,14 @@ const formData = {
   commentValue: ""
 }
 
+const statusData = {
+  inprogress: { color: "orange", value: "inprogress" },
+  ready: { color: "yellow", value: "ready" },
+  onhold: { color: "lightgreen", value: "onhold" },
+  rejected: { color: "red", value: "rejected" },
+  approved: { color: "green", value: "approved" },
+}
+
 class TechnicalRound extends Component {
   constructor(props) {
     super(props);
@@ -25,6 +33,16 @@ class TechnicalRound extends Component {
       rounds: inputData,
       currentUserId: props.currentUserId
     };
+  }
+
+  changeStatus(data, index) {
+    const rnds = this.state.rounds;
+    rnds[index]["status"] = data.value;
+    rnds[index]["statusColor"] = data.color;
+    this.setState({
+      rounds: rnds
+    });
+    this.props.techCallback(rnds);
   }
 
   componentDidMount() {
@@ -122,17 +140,23 @@ class TechnicalRound extends Component {
                   aria-expanded="false"
                 >
                   Status
-               </button>
+                </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" onClick={() => {
+                    this.changeStatus(statusData.inprogress, index)
+                  }}>
                     In progress
-                 </a>
-                  <a class="dropdown-item" href="#">
+                  </a>
+                  <a class="dropdown-item" onClick={(e) => {
+                    this.changeStatus(statusData.rejected, index)
+                  }}>
                     Rejected
-                 </a>
-                  <a class="dropdown-item" href="#">
+                  </a>
+                  <a class="dropdown-item" onClick={(e) => {
+                    this.changeStatus(statusData.approved, index)
+                  }}>
                     Approved
-                 </a>
+                  </a>
                 </div>
               </div>
             </div>
