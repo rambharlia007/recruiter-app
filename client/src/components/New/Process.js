@@ -5,16 +5,33 @@ import axios from "axios";
 import "bootstrap/dist/js/bootstrap.min.js";
 import FitmentEvaluationRound from "../Common/FitmentEvaluationRound";
 import TechnicalRound from "../Common/TechnicalRound";
+import CodeEvaluationRound from "../Common/CodeEvaluationRound"
 import CommonService from "../../services/common";
 
 const roundType = {
   fitmentEvaluationRound: 1,
-  tech1: 2,
-  tech2: 3,
-  codeEvaluationRound: 4,
-  cdlRound: 5,
-  mdRound: 6
+  techRound: 2,
+  codeEvaluationRound: 3,
+  cdlRound: 4,
+  mdRound: 5
 };
+
+const codeEvaluationRoundData = {
+  comments: "",
+  technologies: [{
+    name: "",
+    rating: ""
+  }],
+  isEditable: false,
+  isVisible: false,
+  name: "Code evaluation round",
+  assignedTo: "",
+  rating: 0,
+  bgColor: "",
+  status: "start",
+  statusColor: "yellow"
+};
+
 
 const fitmentEvaluationRoundData = {
   suggestion1: "",
@@ -69,6 +86,7 @@ class Process extends Component {
       fitmentEvaluationRound: fitmentEvaluationRoundData,
       technicalRound: [],
       interviewers: [],
+      codeEvaluationRound: null,
       currentUserId: this.common.getLocalStorageData("id"),
       assignedId: ""
     };
@@ -100,15 +118,45 @@ class Process extends Component {
     });
   }
 
+  addCodeEvaluationRound() {
+    this.setState({codeEvaluationRound : codeEvaluationRoundData})
+  }
+
+  addNewRound() {
+    var e = this.state.currentRoundType;
+    if (e == roundType.techRound) {
+      this.addTechnicalRound();
+    }
+    else if (e == roundType.codeEvaluationRound) {
+      this.addCodeEvaluationRound();
+    }
+  }
+
+
+  addTechnicalRound() {
+    var technicalRounds = this.state.technicalRound;
+    var assignedData = this.state.interviewers.filter(a => { return a._id == this.state.assignedId })[0];
+    var newTechnicalData = { ...technicalData };
+    newTechnicalData.isEditable = assignedData._id == this.state.currentUserId;
+    newTechnicalData.isVisible = false;
+    newTechnicalData.assignedTo = assignedData.username;
+    newTechnicalData.assignedId = this.state.assignedId;
+    newTechnicalData.disableClass = newTechnicalData.isEditable ? "" : "div-disable"
+    newTechnicalData.name = `TechnicalRound ${this.state.technicalRound.length + 1}`
+    technicalRounds.push(newTechnicalData);
+    this.setState({ technicalRound: technicalRounds });
+  }
+
   techCallback(data) {
     this.setState({ technicalRound: data })
   }
 
-  fitmentCallback(data){
+  fitmentCallback(data) {
     this.setState({ fitmentEvaluationRound: data })
   }
   render() {
-    const fitmentEvaluationRound = this.state.fitmentEvaluationRound
+    const fitmentEvaluationRound = this.state.fitmentEvaluationRound;
+    const codeEvaluationRound = this.state.codeEvaluationRound;
     return (
       <div>
         <div className="row justify-content-md-center">
@@ -156,13 +204,30 @@ class Process extends Component {
                   <small class="form-text text-muted">{data.assignedTo}</small>
                   <span class="badge badge-secondary1 badge-pill">{data.rating}</span>
                 </li>)
-              )} 
-
+              )}
+              {codeEvaluationRound && <li class={"list-group-item d-flex justify-content-between align-items-center " + codeEvaluationRound.bgColor}>
+                <span class={"dot " + codeEvaluationRound.statusColor}></span>
+                <small class="form-text text-muted round-small-spec" onClick={() => {
+                  codeEvaluationRound.isVisible = true;
+                  codeEvaluationRound.bgColor = "bg-grey"
+                  fitmentEvaluationRound.isVisible = false;
+                  fitmentEvaluationRound.bgColor = "";
+                  var x = this.state.technicalRound;
+                  x.forEach(element => {
+                    element.isVisible = false;
+                    element.bgColor = ""
+                  });
+                  this.setState({ technicalRound: x, fitmentEvaluationRound: fitmentEvaluationRound, codeEvaluationRound: codeEvaluationRound });
+                }}>{codeEvaluationRound.name}</small>
+                <small class="form-text text-muted">{fitmentEvaluationRound.assignedTo}</small>
+                <span class="badge badge-secondary1 badge-pill">{fitmentEvaluationRound.rating}</span>
+              </li>}
             </ul>
           </div>
           <div className="col-md-6 pb10">
             <FitmentEvaluationRound currentUserId={this.state.currentUserId} fitmentEvaluationRoundData={this.state.fitmentEvaluationRound} fitmentCallback={this.fitmentCallback.bind(this)}></FitmentEvaluationRound>
             <TechnicalRound currentUserId={this.state.currentUserId} technicalData={this.state.technicalRound} techCallback={this.techCallback.bind(this)}></TechnicalRound>
+            {this.state.codeEvaluationRound && <CodeEvaluationRound data={this.state.codeEvaluationRound}></CodeEvaluationRound>}
           </div>
         </div>
 
@@ -187,7 +252,7 @@ class Process extends Component {
                         this.handleInputChange(e);
                       }}
                     >
-                      <option value={roundType.tech1}>Technical round</option>
+                      <option value={roundType.techRound}>Technical round</option>
                       <option value={roundType.codeEvaluationRound}>
                         Code evaluation
                     </option>
@@ -215,17 +280,7 @@ class Process extends Component {
                     <textarea class="form-control" rows="2" />
                   </div>
                   <button type="button" className="btn btn-default btn-sm pull-right" onClick={() => {
-                    var x = this.state.technicalRound;
-                    var assignedData = this.state.interviewers.filter(a => { return a._id == this.state.assignedId })[0];
-                    var r = { ...technicalData };
-                    r.isEditable = assignedData._id == this.state.currentUserId;
-                    r.isVisible = false;
-                    r.assignedTo = assignedData.username;
-                    r.assignedId = this.state.assignedId;
-                    r.disableClass = r.isEditable ? "" : "div-disable"
-                    r.name = `TechnicalRound ${this.state.technicalRound.length + 1}`
-                    x.push(r);
-                    this.setState({ technicalRound: x });
+                    this.addNewRound();
                   }}>
                     Send Email
                 </button>
