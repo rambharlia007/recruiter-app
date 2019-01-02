@@ -4,12 +4,12 @@ import Axios from "axios";
 import "bootstrap/dist/js/bootstrap.min.js";
 
 const statusData = {
-  inprogress : {color:"orange", value: "inprogress"},
-  ready : {color:"yellow", value: "start"},
-  onhold : {color:"lightgreen", value: "onhold"},
-  rejected:{color:"red", value: "rejected"},
-  approved:{color:"green", value: "approved"},
-}
+  inprogress: { color: "orange", value: "inprogress" },
+  ready: { color: "yellow", value: "start" },
+  onhold: { color: "lightgreen", value: "onhold" },
+  rejected: { color: "red", value: "rejected" },
+  approved: { color: "green", value: "approved" }
+};
 
 class FitmentEvaluationRound extends Component {
   constructor(props) {
@@ -17,17 +17,17 @@ class FitmentEvaluationRound extends Component {
     this.state = props.fitmentEvaluationRoundData;
   }
 
-changeStatus(data){
+  changeStatus(data) {
     const currentState = this.state;
     currentState.status = data.value;
     currentState.statusColor = data.color;
     this.setState(currentState);
     this.props.fitmentCallback(currentState);
-}
+  }
 
   render() {
     return (
-      this.state.isVisible && (
+      this.props.fitmentEvaluationRoundData.isVisible && (
         <div class="card">
           <div
             className={
@@ -121,19 +121,28 @@ changeStatus(data){
                   {this.state.status}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" onClick={()=>{
-                    this.changeStatus(statusData.inprogress)
-                  }}>
+                  <a
+                    class="dropdown-item"
+                    onClick={() => {
+                      this.changeStatus(statusData.inprogress);
+                    }}
+                  >
                     In progress
                   </a>
-                  <a class="dropdown-item" onClick={(e)=>{
-                    this.changeStatus(statusData.rejected)
-                  }}>
+                  <a
+                    class="dropdown-item"
+                    onClick={e => {
+                      this.changeStatus(statusData.rejected);
+                    }}
+                  >
                     Rejected
                   </a>
-                  <a class="dropdown-item" onClick={(e)=>{
-                    this.changeStatus(statusData.approved)
-                  }}>
+                  <a
+                    class="dropdown-item"
+                    onClick={e => {
+                      this.changeStatus(statusData.approved);
+                    }}
+                  >
                     Approved
                   </a>
                 </div>

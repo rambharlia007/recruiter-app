@@ -7,7 +7,7 @@ body {
   display: -ms-flexbox;
   display: flex;
   -ms-flex-align: center;
-  background-color: #eeee !important;
+  background-color: #e9eaed !important;
 }
 
 .btn-secondary {
@@ -75,7 +75,7 @@ body {
   background-color: #6c757d !important;
   border-color: #6c757d !important;
 }
-.badge-secondary1{
+.badge-secondary1 {
   background-color: #6c757d !important;
   border-color: #6c757d !important;
 }
@@ -85,23 +85,23 @@ body {
   border-color: #6c757d !important;
 }
 
-.custom-div{
+.custom-div {
   border: 1px solid #ced4da;
   padding: 10px;
 }
 
-.mr5{
+.mr5 {
   margin-right: 5px !important;
 }
-.mb5{
+.mb5 {
   margin-bottom: 5px !important;
 }
 
-.pb10{
+.pb10 {
   padding-bottom: 10px !important;
 }
 
-.bg-grey{
+.bg-grey {
   background: #929da721 !important;
 }
 
@@ -110,9 +110,9 @@ body {
   background-color: #6c757d;
 }
 
-.div-disable{
-    pointer-events: none;
-    opacity: 0.4;
+.div-disable {
+  pointer-events: none;
+  opacity: 0.4;
 }
 
 .dot {
@@ -121,4 +121,8 @@ body {
   background-color: #bbb;
   border-radius: 50%;
   display: inline-block;
+}
+
+.page-title {
+  background-color: #f6f7f8 !important;
 }
