@@ -26,7 +26,7 @@ body {
 
 .custom-datatable {
   background-color: white;
-  font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif !important;
+  font-size: 13px;
   margin: 0;
   padding: 0;
   color: #333;
@@ -125,4 +125,29 @@ body {
 
 .page-title {
   background-color: #f6f7f8 !important;
+}
+
+.calendar{
+  background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%
+}
+
+.p15{
+  padding: 15px !important;
+}
+.p10{
+  padding: 10px !important;
+}
+
+.breadcrumb {
+  padding: 0px !important;
+  margin: 0px !important;
+  background-color: #f6f7f8 !important;
+}
+
+.breadcrumb li a {
+  color: #979898 !important;
+}
+
+.header-pad{
+  padding-bottom: 65px !important;
 }

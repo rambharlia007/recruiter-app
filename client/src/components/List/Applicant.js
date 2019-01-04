@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import "datatables.net-dt/css/jquery.dataTables.min.css";
-import "datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css";
+// import "datatables.net-dt/css/jquery.dataTables.min.css";
+// import "datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css";
 import CommonService from "../../services/common";
 import { Bar } from "react-chartjs-2";
 import moment from "moment";
+import "daterangepicker/daterangepicker.css";
 var $ = require("jquery");
 require("datatables.net");
+require("daterangepicker");
 
 const data = {
   labels: ["Nidhin", "Ram", "Vashist", "Puneeth", "Kamban", "Vibha", "R-1"],
@@ -116,10 +118,10 @@ class Applicant extends Component {
           url: "http://localhost:5000/protected",
           type: "GET",
           headers: this.common.getTokenHeader(),
-          dataSrc: function(json) {
+          dataSrc: function (json) {
             return json;
           },
-          error: function(xhr, error) {
+          error: function (xhr, error) {
             if (xhr.status == 401) alert("Unauthorised user");
           }
         },
@@ -130,11 +132,11 @@ class Applicant extends Component {
         columns: [
           {
             data: "name",
-            render: function(data, type, row, meta) {
+            render: function (data, type, row, meta) {
               console.log(row);
               return `<span><a href="${window.location.origin}/new/process?id=${
                 row._id
-              }&rid=${row.recruiterId}">${data}</a></span>`;
+                }&rid=${row.recruiterId}">${data}</a></span>`;
             }
           },
           { data: "recruiter" },
@@ -149,8 +151,9 @@ class Applicant extends Component {
 
       $(this.refs.reportrange).daterangepicker(
         {
-          startDate: start,
-          endDate: end,
+          startDate: this.state.start,
+          endDate: this.state.end,
+          opens: 'left',
           ranges: {
             Today: [moment(), moment()],
             Yesterday: [
@@ -173,12 +176,12 @@ class Applicant extends Component {
         this.cb
       );
 
-      this.cb(start, end);
+      this.cb(this.state.start, this.state.end);
     }
   }
 
   cb(start, end) {
-    $("#reportrange span").html(
+    $("#reportrange1 span").html(
       start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
     );
   }
@@ -190,14 +193,26 @@ class Applicant extends Component {
     } else {
       return (
         <React.Fragment>
-          <div className="row page-title">
-            <div className="col-md-6">
-              <h3>Applicant</h3>
+          <div className="row page-title p10">
+            <div className="col-sm-8">
+              {/* <h3>Applicant</h3> */}
+
+              <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item active">
+                    <i class="fas fa-home"></i>
+                    <a href="#">&nbsp; Home
+                  </a> </li>
+                  <li class="breadcrumb-item active"><a href="#">Applicant</a></li>
+                </ol>
+              </nav>
+
             </div>
-            <div className="col-md-6">
+            <div className="col-sm-4">
               <div
+                id="reportrange1"
                 ref="reportrange"
-                style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%"
+                className="calendar"
               >
                 <i class="fa fa-calendar" />
                 &nbsp;
@@ -206,18 +221,7 @@ class Applicant extends Component {
             </div>
           </div>
 
-          <div className="row justify-content-md-center">
-            <div className="col-md-12">
-              <button
-                type="button"
-                className="btn btn-default btn-sm pull-right"
-                onClick={() => {
-                  this.props.history.replace("/new/applicant");
-                }}
-              >
-                Create New Applicant
-              </button>
-            </div>
+          <div className="row justify-content-md-center pt15">
             <div className="col-md-4 pb10">
               <div className="card">
                 <div className="card-body">
@@ -239,12 +243,12 @@ class Applicant extends Component {
                 </div>
               </div>
             </div>
-            <div className="col-md-12">
+            <div className="col-md-12 p15">
               <div className="card">
                 <div className="card-body">
                   <table
                     ref="main"
-                    className="display custom-datatable"
+                    className="table table-hover perf table-condensed dataTable custom-datatable"
                     style={{ width: "100%" }}
                   >
                     <thead>

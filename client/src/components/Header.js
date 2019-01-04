@@ -42,7 +42,7 @@ class Header extends Component {
       borderBottom: "3px solid #343a405e"
     };
     return (
-      <header>
+      <header className="header-pad">
         <Navbar style={bgPink} dark expand="md" scrolling fixed="top">
           <NavbarBrand href="/">
             <strong>DevOn</strong>

@@ -17,7 +17,7 @@ import Profile from "./components/List/Profile";
 
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "mdbreact/dist/css/mdb.css";
+// import "mdbreact/dist/css/mdb.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 
 var commonService = new CommonService();
@@ -58,7 +58,7 @@ class App extends Component {
             }}
           />
           <main>
-            <div style={{ paddingTop: "80px" }}>
+            <div>
               <PrivateRoute
                 exact
                 path="/new/applicant"
