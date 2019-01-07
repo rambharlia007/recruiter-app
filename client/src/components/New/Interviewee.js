@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import Header from "../../components/Header";
 import $ from "jquery";
 import Axios from "axios";
 import "bootstrap/dist/js/bootstrap.min.js";
 import axios from "axios";
+import "mdbreact/dist/css/mdb.css";
 import {
   Container,
   Row,
@@ -188,7 +188,24 @@ class TempForm extends Component {
     const { formData, activeTab } = this.state;
     return (
       <div>
-        <Row className="justify-content-md-center">
+        <div className="row page-title p10">
+          <div className="col-sm-8">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active">
+                  <i class="fas fa-home" />
+                  <a>&nbsp; Home</a>{" "}
+                </li>
+                <li class="breadcrumb-item active">
+                  <a>New Applicant</a>
+                </li>
+              </ol>
+            </nav>
+            <h4>Candidate Evaluation Form</h4>
+          </div>
+        </div>
+
+        <Row className="justify-content-md-center pt15">
           <div
             class="modal fade"
             id="exampleModalCenter"
@@ -233,11 +250,6 @@ class TempForm extends Component {
             </div>
           </div>
 
-          <div className="col-md-10 offset-2">
-            <p className="h4 text-center" style={{ padding: "10px" }}>
-              Candidate Evaluation Form
-            </p>
-          </div>
           <div class="col-2">
             <div class="list-group" id="myList" role="tablist">
               {this.renderListGroup()}

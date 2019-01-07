@@ -124,7 +124,23 @@ class Profile extends Component {
   render() {
     return (
       <div>
-        <div className="row justify-content-md-center">
+        <div className="row page-title p10">
+          <div className="col-sm-8">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item active">
+                  <i class="fas fa-home" />
+                  <a>&nbsp; Home</a>{" "}
+                </li>
+                <li class="breadcrumb-item active">
+                  <a>Profile</a>
+                </li>
+              </ol>
+            </nav>
+            <h4>Profile</h4>
+          </div>
+        </div>
+        <div className="row justify-content-md-center pt15">
           <div className="col-md-11">
             <div className="card">
               <div className="card-body">
