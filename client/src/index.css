@@ -127,14 +127,18 @@ body {
   background-color: #f6f7f8 !important;
 }
 
-.calendar{
-  background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%
+.calendar {
+  background: #fff;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  width: 100%;
 }
 
-.p15{
+.p15 {
   padding: 15px !important;
 }
-.p10{
+.p10 {
   padding: 10px !important;
 }
 
@@ -148,6 +152,11 @@ body {
   color: #979898 !important;
 }
 
-.header-pad{
+.header-pad {
   padding-bottom: 65px !important;
+}
+
+.btn-add-tech {
+  padding-left: 10px !important;
+  margin-top: -10px !important;
 }

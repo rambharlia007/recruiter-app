@@ -3,6 +3,7 @@ import $ from "jquery";
 import Axios from "axios";
 import "bootstrap/dist/js/bootstrap.min.js";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import {
   Container,
@@ -504,7 +505,7 @@ class TempForm extends Component {
                 {activeTab.counter !== 1 && (
                   <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-sm btn-default"
                     onClick={() => {
                       this.tabMovementHandler(2);
                     }}
@@ -515,7 +516,7 @@ class TempForm extends Component {
                 {activeTab.counter !== 4 && (
                   <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-sm btn-default"
                     onClick={() => {
                       this.tabMovementHandler(0);
                     }}
@@ -526,7 +527,7 @@ class TempForm extends Component {
                 {activeTab.counter == 4 && (
                   <button
                     type="button"
-                    class="btn btn-default"
+                    class="btn btn-sm btn-default"
                     onClick={() => {
                       this.submitApplicant();
                     }}

@@ -79,7 +79,7 @@ class CodeEvaluationRound extends Component {
                 </div>
               );
             })}
-            <div className="row col-md-4">
+            <div className="row col-md-4 btn-add-tech">
               <button
                 type="button"
                 className="btn btn-default btn-sm"

@@ -7,6 +7,7 @@ import FitmentEvaluationRound from "../Common/FitmentEvaluationRound";
 import TechnicalRound from "../Common/TechnicalRound";
 import CodeEvaluationRound from "../Common/CodeEvaluationRound";
 import CommonService from "../../services/common";
+//import PresentationEvaluationRound from "../Common/PresentationEvaluationRound";
 
 const roundType = {
   fitmentEvaluationRound: 1,
@@ -74,6 +75,28 @@ const technicalData = {
   statusColor: "yellow"
 };
 
+const presentationRoundData = {
+  comments: "",
+  contentOrCode: "",
+  communication: "",
+  energy: "",
+  attitude: "",
+  skills: [
+    {
+      name: "",
+      rating: ""
+    }
+  ],
+  isEditable: false,
+  isVisible: false,
+  name: "Presentation evaluation round",
+  assignedTo: "",
+  rating: 0,
+  bgColor: "",
+  status: "start",
+  statusColor: "yellow"
+};
+
 class Process extends Component {
   constructor(props) {
     super(props);
@@ -85,6 +108,7 @@ class Process extends Component {
       smsContent: "",
       currentRoundType: roundType.fitmentEvaluationRound,
       fitmentEvaluationRound: fitmentEvaluationRoundData,
+      presentationRoundData: null,
       technicalRound: [],
       interviewers: [],
       codeEvaluationRound: null,
@@ -316,6 +340,11 @@ class Process extends Component {
             />
             {this.state.codeEvaluationRound && (
               <CodeEvaluationRound data={this.state.codeEvaluationRound} />
+            )}
+            {this.state.presentationRoundData && (
+              <PresentationEvaluationRound
+                data={this.state.presentationRoundData}
+              />
             )}
           </div>
         </div>
