@@ -160,3 +160,11 @@ body {
   padding-left: 10px !important;
   margin-top: -10px !important;
 }
+
+.display-inline {
+  display: inline;
+}
+
+.lightgreen {
+  background-color: #00c8517a !important;
+}

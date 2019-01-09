@@ -58,7 +58,7 @@ class CodeEvaluationRound extends Component {
     return (
       this.props.data.isVisible && (
         <div class="card">
-          <div class="card-body">
+          <div className={"card-body " + this.props.data.disableClass}>
             <h5 class="card-title">Code Evaluation Round</h5>
             {this.state.technologies.map((data, index) => {
               return (

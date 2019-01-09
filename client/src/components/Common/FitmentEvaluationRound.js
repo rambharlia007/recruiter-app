@@ -25,7 +25,21 @@ class FitmentEvaluationRound extends Component {
     this.props.fitmentCallback(currentState);
   }
 
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    const formData = { ...this.state.formData };
+    formData[name] = value;
+    this.setState({
+      formData
+    });
+  }
+
+  saveChanges() {}
+
   render() {
+    const formData = this.state;
     return (
       this.props.fitmentEvaluationRoundData.isVisible && (
         <div class="card">
@@ -40,40 +54,79 @@ class FitmentEvaluationRound extends Component {
                 <small class="form-text text-muted">
                   What impressed you most about the candidate?
                 </small>
-                <textarea class="form-control" rows="2" />
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  name="suggestion1"
+                  value={formData.suggestion1}
+                  onChange={this.handleInputChange}
+                />
               </div>
               <div class="form-group">
                 <small class="form-text text-muted">
                   What according to you, can the candidate improve on?
                 </small>
-                <textarea class="form-control" rows="2" />
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  name="suggestion2"
+                  value={formData.suggestion2}
+                  onChange={this.handleInputChange}
+                />
               </div>
               <div class="form-group">
                 <small class="form-text text-muted">
                   Would the candidate make a good fit at Prowareness?
                 </small>
-                <textarea class="form-control" rows="2" />
+                <textarea
+                  class="form-control"
+                  rows="2"
+                  name="suggestion3"
+                  value={formData.suggestion3}
+                  onChange={this.handleInputChange}
+                />
               </div>
               <div class="form-group">
                 <small class="form-text text-muted">Motivation factors</small>
                 <div class="form-check form-check-inline ">
-                  <input class="form-check-input" type="checkbox" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="isChallengingWorkOrProjects"
+                    value={formData.isChallengingWorkOrProjects}
+                    onChange={this.handleInputChange}
+                  />
                   <small class="form-text text-muted">
                     Challenging work/Projects
                   </small>
                 </div>
                 <div class="form-check form-check-inline ">
-                  <input class="form-check-input" type="checkbox" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="isDesignationOrRole"
+                    value={formData.isDesignationOrRole}
+                    onChange={this.handleInputChange}
+                  />
                   <small class="form-text text-muted">Designation/role</small>
                 </div>
                 <div class="form-check form-check-inline ">
-                  <input class="form-check-input" type="checkbox" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="isFinancialAspects"
+                    value={formData.isFinancialAspects}
+                    onChange={this.handleInputChange}
+                  />
                   <small class="form-text text-muted">Financial aspect</small>
                 </div>
                 <textarea
                   class="form-control"
                   rows="2"
                   placeholder="Comments"
+                  name="isChallengingWorkOrProjects"
+                  value={formData.motivationalFactorComments}
+                  onChange={this.handleInputChange}
                 />
               </div>
 
@@ -81,24 +134,48 @@ class FitmentEvaluationRound extends Component {
                 <small class="form-text text-muted">Passion</small>
 
                 <div class="form-check form-check-inline ">
-                  <input class="form-check-input" type="checkbox" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="isWritingBlogs"
+                    value={formData.isWritingBlogs}
+                    onChange={this.handleInputChange}
+                  />
                   <small class="form-text text-muted">Writing Blogs</small>
                 </div>
                 <div class="form-check form-check-inline ">
-                  <input class="form-check-input" type="checkbox" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="isOpenSourceProjects"
+                    value={formData.isOpenSourceProjects}
+                    onChange={this.handleInputChange}
+                  />
                   <small class="form-text text-muted">
                     Open source projects
                   </small>
                 </div>
                 <div class="form-check form-check-inline ">
-                  <input class="form-check-input" type="checkbox" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="isAnyConference"
+                    value={formData.isAnyConference}
+                    onChange={this.handleInputChange}
+                  />
                   <small class="form-text text-muted">
                     {" "}
                     Association with any Groups / Conferences
                   </small>
                 </div>
                 <div class="form-check form-check-inline ">
-                  <input class="form-check-input" type="checkbox" />
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="isTechnicalCertifications"
+                    value={formData.isTechnicalCertifications}
+                    onChange={this.handleInputChange}
+                  />
                   <small class="form-text text-muted">
                     Technical Certifications
                   </small>
@@ -107,9 +184,12 @@ class FitmentEvaluationRound extends Component {
                   class="form-control"
                   rows="2"
                   placeholder="Commitment [*] (number of companies changed (descending order) and reasons)"
+                  name="passionComments"
+                  value={formData.passionComments}
+                  onChange={this.handleInputChange}
                 />
               </div>
-              <div class="dropdown">
+              <div class="dropdown display-inline">
                 <button
                   class="btn btn-default dropdown-toggle btn-sm"
                   type="button"
@@ -145,8 +225,25 @@ class FitmentEvaluationRound extends Component {
                   >
                     Approved
                   </a>
+                  <a
+                    class="dropdown-item"
+                    onClick={e => {
+                      this.changeStatus(statusData.onhold);
+                    }}
+                  >
+                    On Hold
+                  </a>
                 </div>
               </div>
+              <button
+                type="button"
+                class="btn btn-default btn-sm"
+                onClick={e => {
+                  this.saveChanges();
+                }}
+              >
+                Save Changes
+              </button>
             </form>
           </div>
         </div>
