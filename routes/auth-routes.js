@@ -68,7 +68,6 @@ router.get(
     session: false
   }),
   (req, res) => {
-    console.log(res._parsedUrl);
     res.send("res");
   }
 );

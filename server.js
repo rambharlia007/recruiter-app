@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 
 const User = require("./models/user-model");
 const Interviewee = require("./models/interviewee-model");
+const InterviewProcess = require("./models/interviewProcess-model");
 
 const cors = require("cors");
 
@@ -43,7 +44,7 @@ app.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     console.log("In protected method");
-    Interviewee.find({}, function(err, interviewers) {
+    Interviewee.find({}, function (err, interviewers) {
       if (err) res.status(500).send("Internal server error");
       else {
         res.status(200).send(interviewers);
@@ -56,7 +57,7 @@ app.get(
   "/user",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    User.find({}, function(err, users) {
+    User.find({}, function (err, users) {
       if (err) res.status(500).send("Internal server error");
       else {
         res.status(200).send(users);
@@ -66,7 +67,7 @@ app.get(
 );
 
 app.get("/interviewer", (req, res) => {
-  User.find({}, function(err, users) {
+  User.find({}, function (err, users) {
     if (err) res.status(500).send("Internal server error");
     else {
       var data = users.map(d => {
@@ -81,10 +82,23 @@ app.get(
   "/user/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    User.findById(req.params.id, function(err, users) {
+    User.findById(req.params.id, function (err, users) {
       if (err) res.status(500).send("Internal server error");
       else {
         res.status(200).send(users);
+      }
+    });
+  }
+);
+
+app.get(
+  "/interviewprocess/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    InterviewProcess.findOne({ intervieweeId: req.params.id }, function (err, data) {
+      if (err) res.status(500).send("Internal server error");
+      else {
+        res.status(200).send(data);
       }
     });
   }
@@ -103,9 +117,29 @@ app.post("/applicant", (req, res) => {
 });
 
 app.post(
-  "/interviewprocess/:id",
+  "/interviewprocess",
   passport.authenticate("jwt", { session: false }),
-  (req, res) => {}
+  (req, res) => {
+    var data = req.body;
+    console.log(data.intervieweeId);
+    InterviewProcess.findOneAndUpdate(
+      { intervieweeId: data.intervieweeId },
+      data,
+      {
+        upsert: true,
+        new: true,
+        overwrite: false
+      },
+      function (err, user) {
+        if (err) {
+          console.log(err);
+          res.status(400).send("unable to save to database");
+        } else {
+          res.send("item saved to database");
+        }
+      }
+    );
+  }
 );
 
 app.listen(5000, () => {

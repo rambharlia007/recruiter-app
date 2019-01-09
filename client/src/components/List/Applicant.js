@@ -118,10 +118,10 @@ class Applicant extends Component {
           url: "http://localhost:5000/protected",
           type: "GET",
           headers: this.common.getTokenHeader(),
-          dataSrc: function(json) {
+          dataSrc: function (json) {
             return json;
           },
-          error: function(xhr, error) {
+          error: function (xhr, error) {
             if (xhr.status == 401) alert("Unauthorised user");
           }
         },
@@ -132,11 +132,11 @@ class Applicant extends Component {
         columns: [
           {
             data: "name",
-            render: function(data, type, row, meta) {
+            render: function (data, type, row, meta) {
               console.log(row);
               return `<span><a href="${window.location.origin}/new/process?id=${
                 row._id
-              }&rid=${row.recruiterId}">${data}</a></span>`;
+                }&rid=${row.recruiterId}">${data}</a></span>`;
             }
           },
           { data: "recruiter" },
@@ -153,7 +153,7 @@ class Applicant extends Component {
         {
           startDate: this.state.start,
           endDate: this.state.end,
-          opens: "left",
+          opens: 'left',
           ranges: {
             Today: [moment(), moment()],
             Yesterday: [
@@ -198,18 +198,20 @@ class Applicant extends Component {
               <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item active">
-                    <i class="fas fa-home" />
-                    <a>&nbsp; Home</a>{" "}
-                  </li>
-                  <li class="breadcrumb-item active">
-                    <a>Applicant</a>
-                  </li>
+                    <i class="fas fa-home"></i>
+                    <a href="#">&nbsp; Home
+                  </a> </li>
+                  <li class="breadcrumb-item active"><a href="#">Applicant</a></li>
                 </ol>
               </nav>
-              <h4>Applicant</h4>
+
             </div>
             <div className="col-sm-4">
-              <div id="reportrange1" ref="reportrange" className="calendar">
+              <div
+                id="reportrange1"
+                ref="reportrange"
+                className="calendar"
+              >
                 <i class="fa fa-calendar" />
                 &nbsp;
                 <span /> <i class="fa fa-caret-down" />

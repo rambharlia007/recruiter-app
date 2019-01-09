@@ -2,194 +2,187 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const interviewProcessSchema = new Schema({
-  currentRoundAssignedTo: {
-    type: "String"
-  },
-  nextRoundAssignedTo: {
-    type: "String"
-  },
-  smsContent: {
-    type: "String"
-  },
-  currentRoundType: {
-    type: "Date"
-  },
   fitmentEvaluationRound: {
     suggestion1: {
-      type: "String"
+      type: 'String'
     },
     suggestion2: {
-      type: "String"
+      type: 'String'
     },
     suggestion3: {
-      type: "String"
+      type: 'String'
     },
     isChallengingWorkOrProjects: {
-      type: "Boolean"
+      type: 'Boolean'
     },
     isDesignationOrRole: {
-      type: "Boolean"
+      type: 'Boolean'
     },
     isFinancialAspects: {
-      type: "Boolean"
+      type: 'Boolean'
     },
     motivationalFactorComments: {
-      type: "String"
+      type: 'String'
     },
     isWritingBlogs: {
-      type: "Boolean"
+      type: 'Boolean'
     },
     isOpenSourceProjects: {
-      type: "Boolean"
+      type: 'Boolean'
     },
     isAnyConference: {
-      type: "Boolean"
+      type: 'Boolean'
     },
     isTechnicalCertifications: {
-      type: "Boolean"
+      type: 'Boolean'
     },
     passionComments: {
-      type: "String"
-    },
-    isEditable: {
-      type: "Boolean"
-    },
-    isVisible: {
-      type: "Boolean"
+      type: 'String'
     },
     name: {
-      type: "String"
+      type: 'String'
     },
     assignedTo: {
-      type: "String"
+      type: 'String'
     },
     rating: {
-      type: "Number"
-    },
-    bgColor: {
-      type: "String"
+      type: 'Number'
     },
     status: {
-      type: "String"
-    },
-    statusColor: {
-      type: "String"
+      type: 'String'
     },
     assignedId: {
-      type: "ObjectId"
-    },
-    disableClass: {
-      type: "String"
+      type: 'String'
     }
   },
   presentationEvaluationRound: {
     comments: {
-      type: "String"
+      type: 'String'
     },
     contentOrCode: {
-      type: "String"
+      type: 'String'
     },
     communication: {
-      type: "String"
+      type: 'String'
     },
     energy: {
-      type: "String"
+      type: 'String'
     },
     attitude: {
-      type: "String"
+      type: 'String'
     },
     skills: {
-      type: ["Mixed"]
-    },
-    isEditable: {
-      type: "Boolean"
-    },
-    isVisible: {
-      type: "Boolean"
+      type: [
+        'Mixed'
+      ]
     },
     name: {
-      type: "String"
+      type: 'String'
     },
     assignedTo: {
-      type: "String"
+      type: 'String'
     },
     rating: {
-      type: "Number"
-    },
-    bgColor: {
-      type: "String"
+      type: 'Number'
     },
     status: {
-      type: "String"
-    },
-    statusColor: {
-      type: "String"
-    },
-    disableClass: {
-      type: "String"
+      type: 'String'
     },
     assignedId: {
-      type: "ObjectId"
+      type: 'String'
     }
   },
   cdlRound: {
-    type: "Array"
+    name: {
+      type: 'String'
+    },
+    assignedTo: {
+      type: 'String'
+    },
+    status: {
+      type: 'String'
+    },
+    assignedId: {
+      type: 'String'
+    }
   },
   mdRound: {
-    type: "Array"
+    name: {
+      type: 'String'
+    },
+    assignedTo: {
+      type: 'String'
+    },
+    status: {
+      type: 'String'
+    },
+    assignedId: {
+      type: 'String'
+    }
   },
   technicalRound: {
-    type: ["Mixed"]
-  },
-  interviewers: {
-    type: ["Mixed"]
+    type: [
+      {
+        rating: {
+          type: 'Number'
+        },
+        skills: {
+          type: 'Array'
+        },
+        comments: {
+          type: 'String'
+        },
+        assignedTo: {
+          type: 'String'
+        },
+        name: {
+          type: 'Date'
+        },
+        commentValue: {
+          type: 'String'
+        },
+        assignedId: {
+          type: 'String'
+        },
+        currentUserId: {
+          type: 'String'
+        },
+        status: {
+          type: 'String'
+        }
+      }
+    ]
   },
   codeEvaluationRound: {
     comments: {
-      type: "String"
+      type: 'String'
     },
     technologies: {
-      type: ["Mixed"]
-    },
-    isEditable: {
-      type: "Boolean"
-    },
-    isVisible: {
-      type: "Boolean"
+      type: [
+        'Mixed'
+      ]
     },
     name: {
-      type: "String"
+      type: 'String'
     },
     assignedTo: {
-      type: "String"
+      type: 'String'
     },
     rating: {
-      type: "Number"
-    },
-    bgColor: {
-      type: "String"
+      type: 'Number'
     },
     status: {
-      type: "String"
-    },
-    statusColor: {
-      type: "String"
-    },
-    disableClass: {
-      type: "String"
+      type: 'String'
     },
     assignedId: {
-      type: "ObjectId"
+      type: 'String'
     }
   },
-  currentUserId: {
-    type: "ObjectId"
+  recruiterId: {
+    type: 'String'
   },
-  assignedId: {
-    type: "ObjectId"
-  },
-  canAddNewRounds: {
-    type: "Boolean"
+  intervieweeId: {
+    type: 'String'
   }
 });
 

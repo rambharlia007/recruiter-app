@@ -131,23 +131,73 @@ class Process extends Component {
       codeEvaluationRound: null,
       currentUserId: this.common.getLocalStorageData("id"),
       assignedId: "",
-      canAddNewRounds: false
+      canAddNewRounds: false,
+      recruiterId: "",
+      intervieweeId: "",
+      id: "",
+      showLoader: true
     };
   }
 
   componentDidMount() {
+    const values = queryString.parse(this.props.location.search);
     var self = this;
     axios
       .get(`http://localhost:5000/user`, {
         headers: this.common.getTokenHeader()
       })
-      .then(function(response) {
+      .then(function (response) {
         self.setState({ interviewers: response.data });
         self.authenticateFitmentEvaluationRound();
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
+
+    axios
+      .get(`http://localhost:5000/interviewprocess/${values.id}`, {
+        headers: this.common.getTokenHeader()
+      })
+      .then(function (response) {
+        self.prefillFormData(response.data);
+      })
+      .catch(function (error) {
+        alert("fail");
+        console.log(error);
+      });
+  }
+
+  prefillFormData(data) {
+    if (data && data.fitmentEvaluationRound) {
+      var fitmentData = this.getFitmentPrefillData(data.fitmentEvaluationRound);
+      this.setState({ fitmentEvaluationRound: fitmentData });
+    }
+    this.setState({ showLoader: false });
+  }
+
+  getFitmentPrefillData(data) {
+    var d = this.state.fitmentEvaluationRound;
+    d.suggestion1 = data.suggestion1;
+    d.suggestion2 = data.suggestion2;
+    d.suggestion3 = data.suggestion3;
+    d.isChallengingWorkOrProjects = data.isChallengingWorkOrProjects;
+    d.isDesignationOrRole = data.isDesignationOrRole;
+    d.isFinancialAspects = data.isFinancialAspects;
+    d.motivationalFactorComments = data.motivationalFactorComments;
+    d.isWritingBlogs = data.isWritingBlogs;
+    d.isOpenSourceProjects = data.isOpenSourceProjects;
+    d.isAnyConference = data.isAnyConference;
+    d.isTechnicalCertifications = data.isTechnicalCertifications;
+    d.passionComments = data.passionComments;
+    d.isEditable = data.assignedId == this.state.currentUserId;
+    d.isVisible = true;
+    d.name = data.name;
+    d.assignedTo = data.assignedTo;
+    d.rating = data.rating;
+    d.bgColor = "bg-grey";
+    d.status = data.status;
+    d.statusColor = data.statusColor;
+    return d;
   }
 
   handleInputChange(event) {
@@ -163,6 +213,7 @@ class Process extends Component {
     var data = fitmentEvaluationRoundData;
     const values = queryString.parse(this.props.location.search);
     var recruiterId = values.rid;
+    var intervieweeId = values.id;
     var recuiter = this.getUserById(recruiterId);
     data.assignedTo = recuiter.username;
     data.assignedId = recuiter._id;
@@ -170,7 +221,9 @@ class Process extends Component {
     data.disableClass = data.isEditable ? "" : "div-disable";
     this.setState({
       fitmentEvaluationRound: data,
-      canAddNewRounds: data.isEditable
+      canAddNewRounds: data.isEditable,
+      recruiterId: recruiterId,
+      intervieweeId: intervieweeId
     });
   }
 
@@ -202,7 +255,7 @@ class Process extends Component {
 
   addCdlEvaluationRound() {
     var currentInterviewer = this.getCurrentAssignedInterviewer();
-    const data = [...mdCdlViewModed];
+    const data = { ...mdCdlViewModed };
     data.assignedTo = currentInterviewer.username;
     data.isEditable = currentInterviewer._id == this.state.currentUserId;
     data.disableClass = data.isEditable ? "" : "div-disable";
@@ -213,7 +266,7 @@ class Process extends Component {
   }
   addMdEvaluationRound() {
     var currentInterviewer = this.getCurrentAssignedInterviewer();
-    const data = [...mdCdlViewModed];
+    const data = { ...mdCdlViewModed };
     data.assignedTo = currentInterviewer.username;
     data.isEditable = currentInterviewer._id == this.state.currentUserId;
     data.disableClass = data.isEditable ? "" : "div-disable";
@@ -275,21 +328,22 @@ class Process extends Component {
   }
 
   saveCallback(data, type) {
-    if (type == roundType.fitmentEvaluationRound) {
-      this.setState({ fitmentEvaluationRound: data });
-    }
     var self = this;
-    axios
-      .post(`http://localhost:5000/interviewprocess`, {
-        headers: this.common.getTokenHeader()
-      })
-      .then(function(response) {
-        self.setState({ interviewers: response.data });
-        self.authenticateFitmentEvaluationRound();
-      })
-      .catch(function(error) {
-        console.log(error);
+    if (type == roundType.fitmentEvaluationRound) {
+      this.setState({ fitmentEvaluationRound: data }, () => {
+        axios
+          .post(`http://localhost:5000/interviewprocess`, this.state, {
+            headers: this.common.getTokenHeader()
+          })
+          .then(function (response) {
+            alert("saved succesfully")
+          })
+          .catch(function (error) {
+            alert("fail")
+            console.log(error);
+          });
       });
+    }
   }
 
   showOrHideFitmentEvaluationRound(visibleDecider) {
@@ -429,22 +483,23 @@ class Process extends Component {
             <h4>Interview</h4>
           </div>
         </div>
-        <div className="row justify-content-md-center pt15">
-          {this.state.canAddNewRounds && (
-            <div className="col-md-9">
-              <button
-                type="button"
-                class="btn btn-default btn-sm"
-                data-toggle="modal"
-                data-target="#add-round-modal"
-              >
-                Add rounds
+        {!this.state.showLoader && <div>
+          <div className="row justify-content-md-center pt15">
+            {this.state.canAddNewRounds && (
+              <div className="col-md-9">
+                <button
+                  type="button"
+                  class="btn btn-default btn-sm"
+                  data-toggle="modal"
+                  data-target="#add-round-modal"
+                >
+                  Add rounds
               </button>
-            </div>
-          )}
-        </div>
-        <div className="row justify-content-md-center">
-          <div>
+              </div>
+            )}
+          </div>
+          <div className="row justify-content-md-center">
+            {/* <div>
             <button
               type="button"
               class="btn btn-default btn-sm"
@@ -454,183 +509,183 @@ class Process extends Component {
             >
               Json
             </button>
-          </div>
-          <div className="col-md-3">
-            <ul class="list-group">
-              <li
-                class={
-                  "list-group-item d-flex justify-content-between align-items-center " +
-                  fitmentEvaluationRound.bgColor
-                }
-              >
-                <span class={"dot " + fitmentEvaluationRound.statusColor} />
-                <small
-                  class="form-text text-muted round-small-spec"
-                  onClick={() => {
-                    this.showOrHideFitmentEvaluationRound(true);
-                  }}
-                >
-                  {fitmentEvaluationRound.name}
-                </small>
-                <small class="form-text text-muted">
-                  {fitmentEvaluationRound.assignedTo}
-                </small>
-                <span class="badge badge-secondary1 badge-pill">
-                  {fitmentEvaluationRound.rating}
-                </span>
-              </li>
-              {this.state.technicalRound.map((data, index) => (
+          </div> */}
+            <div className="col-md-3">
+              <ul class="list-group">
                 <li
                   class={
                     "list-group-item d-flex justify-content-between align-items-center " +
-                    data.bgColor
+                    fitmentEvaluationRound.bgColor
                   }
                 >
-                  <span class={"dot " + data.statusColor} />
+                  <span class={"dot " + fitmentEvaluationRound.statusColor} />
                   <small
                     class="form-text text-muted round-small-spec"
                     onClick={() => {
-                      this.showOrHideTechnicalRound(true, index);
+                      this.showOrHideFitmentEvaluationRound(true);
                     }}
                   >
-                    {data.name}
-                  </small>
-                  <small class="form-text text-muted">{data.assignedTo}</small>
-                  <span class="badge badge-secondary1 badge-pill">
-                    {data.rating}
-                  </span>
-                </li>
-              ))}
-              {codeEvaluationRound && (
-                <li
-                  class={
-                    "list-group-item d-flex justify-content-between align-items-center " +
-                    codeEvaluationRound.bgColor
-                  }
-                >
-                  <span class={"dot " + codeEvaluationRound.statusColor} />
-                  <small
-                    class="form-text text-muted round-small-spec"
-                    onClick={() => {
-                      this.showOrHideCodeEvaluationRound(true);
-                    }}
-                  >
-                    {codeEvaluationRound.name}
+                    {fitmentEvaluationRound.name}
                   </small>
                   <small class="form-text text-muted">
-                    {codeEvaluationRound.assignedTo}
+                    {fitmentEvaluationRound.assignedTo}
                   </small>
                   <span class="badge badge-secondary1 badge-pill">
-                    {codeEvaluationRound.rating}
+                    {fitmentEvaluationRound.rating}
                   </span>
                 </li>
-              )}
+                {this.state.technicalRound.map((data, index) => (
+                  <li
+                    class={
+                      "list-group-item d-flex justify-content-between align-items-center " +
+                      data.bgColor
+                    }
+                  >
+                    <span class={"dot " + data.statusColor} />
+                    <small
+                      class="form-text text-muted round-small-spec"
+                      onClick={() => {
+                        this.showOrHideTechnicalRound(true, index);
+                      }}
+                    >
+                      {data.name}
+                    </small>
+                    <small class="form-text text-muted">{data.assignedTo}</small>
+                    <span class="badge badge-secondary1 badge-pill">
+                      {data.rating}
+                    </span>
+                  </li>
+                ))}
+                {codeEvaluationRound && (
+                  <li
+                    class={
+                      "list-group-item d-flex justify-content-between align-items-center " +
+                      codeEvaluationRound.bgColor
+                    }
+                  >
+                    <span class={"dot " + codeEvaluationRound.statusColor} />
+                    <small
+                      class="form-text text-muted round-small-spec"
+                      onClick={() => {
+                        this.showOrHideCodeEvaluationRound(true);
+                      }}
+                    >
+                      {codeEvaluationRound.name}
+                    </small>
+                    <small class="form-text text-muted">
+                      {codeEvaluationRound.assignedTo}
+                    </small>
+                    <span class="badge badge-secondary1 badge-pill">
+                      {codeEvaluationRound.rating}
+                    </span>
+                  </li>
+                )}
 
-              {presentationRoundData && (
-                <li
-                  class={
-                    "list-group-item d-flex justify-content-between align-items-center " +
-                    presentationRoundData.bgColor
-                  }
-                >
-                  <span class={"dot " + presentationRoundData.statusColor} />
-                  <small
-                    class="form-text text-muted round-small-spec"
-                    onClick={() => {
-                      this.showOrHidePresentationEvaluationRound(true);
-                    }}
+                {presentationRoundData && (
+                  <li
+                    class={
+                      "list-group-item d-flex justify-content-between align-items-center " +
+                      presentationRoundData.bgColor
+                    }
                   >
-                    {presentationRoundData.name}
-                  </small>
-                  <small class="form-text text-muted">
-                    {presentationRoundData.assignedTo}
-                  </small>
-                  <span class="badge badge-secondary1 badge-pill">
-                    {presentationRoundData.rating}
-                  </span>
-                </li>
-              )}
+                    <span class={"dot " + presentationRoundData.statusColor} />
+                    <small
+                      class="form-text text-muted round-small-spec"
+                      onClick={() => {
+                        this.showOrHidePresentationEvaluationRound(true);
+                      }}
+                    >
+                      {presentationRoundData.name}
+                    </small>
+                    <small class="form-text text-muted">
+                      {presentationRoundData.assignedTo}
+                    </small>
+                    <span class="badge badge-secondary1 badge-pill">
+                      {presentationRoundData.rating}
+                    </span>
+                  </li>
+                )}
 
-              {cdlRound && (
-                <li
-                  class={
-                    "list-group-item d-flex justify-content-between align-items-center " +
-                    cdlRound.bgColor
-                  }
-                >
-                  <span class={"dot " + cdlRound.statusColor} />
-                  <small
-                    class="form-text text-muted round-small-spec"
-                    onClick={() => {
-                      this.showOrHideCdlRound(true);
-                    }}
+                {cdlRound && (
+                  <li
+                    class={
+                      "list-group-item d-flex justify-content-between align-items-center " +
+                      cdlRound.bgColor
+                    }
                   >
-                    {cdlRound.name}
-                  </small>
-                  <small class="form-text text-muted">
-                    {cdlRound.assignedTo}
-                  </small>
-                  <span class="badge badge-secondary1 badge-pill">
-                    {cdlRound.rating}
-                  </span>
-                </li>
-              )}
+                    <span class={"dot " + cdlRound.statusColor} />
+                    <small
+                      class="form-text text-muted round-small-spec"
+                      onClick={() => {
+                        this.showOrHideCdlRound(true);
+                      }}
+                    >
+                      {cdlRound.name}
+                    </small>
+                    <small class="form-text text-muted">
+                      {cdlRound.assignedTo}
+                    </small>
+                    <span class="badge badge-secondary1 badge-pill">
+                      {cdlRound.rating}
+                    </span>
+                  </li>
+                )}
 
-              {mdRound && (
-                <li
-                  class={
-                    "list-group-item d-flex justify-content-between align-items-center " +
-                    mdRound.bgColor
-                  }
-                >
-                  <span class={"dot " + mdRound.statusColor} />
-                  <small
-                    class="form-text text-muted round-small-spec"
-                    onClick={() => {
-                      this.showOrHideMdRound(true);
-                    }}
+                {mdRound && (
+                  <li
+                    class={
+                      "list-group-item d-flex justify-content-between align-items-center " +
+                      mdRound.bgColor
+                    }
                   >
-                    {mdRound.name}
-                  </small>
-                  <small class="form-text text-muted">
-                    {mdRound.assignedTo}
-                  </small>
-                  <span class="badge badge-secondary1 badge-pill">
-                    {mdRound.rating}
-                  </span>
-                </li>
-              )}
-            </ul>
-          </div>
-          <div className="col-md-6 pb10">
-            <FitmentEvaluationRound
-              currentUserId={this.state.currentUserId}
-              fitmentEvaluationRoundData={this.state.fitmentEvaluationRound}
-              fitmentCallback={this.fitmentCallback.bind(this)}
-              saveCallback={this.saveCallback.bind(this)}
-            />
-            <TechnicalRound
-              currentUserId={this.state.currentUserId}
-              technicalData={this.state.technicalRound}
-              techCallback={this.techCallback.bind(this)}
-            />
-            {this.state.codeEvaluationRound && (
-              <CodeEvaluationRound data={this.state.codeEvaluationRound} />
-            )}
-            {this.state.presentationEvaluationRound && (
-              <PresentationEvaluationRound
-                data={this.state.presentationEvaluationRound}
+                    <span class={"dot " + mdRound.statusColor} />
+                    <small
+                      class="form-text text-muted round-small-spec"
+                      onClick={() => {
+                        this.showOrHideMdRound(true);
+                      }}
+                    >
+                      {mdRound.name}
+                    </small>
+                    <small class="form-text text-muted">
+                      {mdRound.assignedTo}
+                    </small>
+                    <span class="badge badge-secondary1 badge-pill">
+                      {mdRound.rating}
+                    </span>
+                  </li>
+                )}
+              </ul>
+            </div>
+            <div className="col-md-6 pb10">
+              <FitmentEvaluationRound
+                currentUserId={this.state.currentUserId}
+                fitmentEvaluationRoundData={this.state.fitmentEvaluationRound}
+                fitmentCallback={this.fitmentCallback.bind(this)}
+                saveCallback={this.saveCallback.bind(this)}
               />
-            )}
-            {this.state.cdlRound && (
-              <MdCdlEvaluationRound data={this.state.cdlRound} />
-            )}
-            {this.state.mdRound && (
-              <MdCdlEvaluationRound data={this.state.mdRound} />
-            )}
+              <TechnicalRound
+                currentUserId={this.state.currentUserId}
+                technicalData={this.state.technicalRound}
+                techCallback={this.techCallback.bind(this)}
+              />
+              {this.state.codeEvaluationRound && (
+                <CodeEvaluationRound data={this.state.codeEvaluationRound} />
+              )}
+              {this.state.presentationEvaluationRound && (
+                <PresentationEvaluationRound
+                  data={this.state.presentationEvaluationRound}
+                />
+              )}
+              {this.state.cdlRound && (
+                <MdCdlEvaluationRound data={this.state.cdlRound} />
+              )}
+              {this.state.mdRound && (
+                <MdCdlEvaluationRound data={this.state.mdRound} />
+              )}
+            </div>
           </div>
-        </div>
-
+        </div>}
         <div class="modal" id="add-round-modal" tabindex="-1" role="dialog">
           <div class="modal-dialog" role="document">
             <div class="modal-content">

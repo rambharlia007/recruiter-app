@@ -15,6 +15,7 @@ class FitmentEvaluationRound extends Component {
   constructor(props) {
     super(props);
     this.state = props.fitmentEvaluationRoundData;
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   changeStatus(data) {
@@ -29,14 +30,14 @@ class FitmentEvaluationRound extends Component {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    const formData = { ...this.state.formData };
-    formData[name] = value;
     this.setState({
-      formData
+      [name]: value
     });
   }
 
-  saveChanges() {}
+  saveChanges() {
+    this.props.saveCallback(this.state, 1);
+  }
 
   render() {
     const formData = this.state;
@@ -93,7 +94,7 @@ class FitmentEvaluationRound extends Component {
                     class="form-check-input"
                     type="checkbox"
                     name="isChallengingWorkOrProjects"
-                    value={formData.isChallengingWorkOrProjects}
+                    checked={formData.isChallengingWorkOrProjects}
                     onChange={this.handleInputChange}
                   />
                   <small class="form-text text-muted">
@@ -105,7 +106,7 @@ class FitmentEvaluationRound extends Component {
                     class="form-check-input"
                     type="checkbox"
                     name="isDesignationOrRole"
-                    value={formData.isDesignationOrRole}
+                    checked={formData.isDesignationOrRole}
                     onChange={this.handleInputChange}
                   />
                   <small class="form-text text-muted">Designation/role</small>
@@ -115,7 +116,7 @@ class FitmentEvaluationRound extends Component {
                     class="form-check-input"
                     type="checkbox"
                     name="isFinancialAspects"
-                    value={formData.isFinancialAspects}
+                    checked={formData.isFinancialAspects}
                     onChange={this.handleInputChange}
                   />
                   <small class="form-text text-muted">Financial aspect</small>
@@ -124,7 +125,7 @@ class FitmentEvaluationRound extends Component {
                   class="form-control"
                   rows="2"
                   placeholder="Comments"
-                  name="isChallengingWorkOrProjects"
+                  name="motivationalFactorComments"
                   value={formData.motivationalFactorComments}
                   onChange={this.handleInputChange}
                 />
@@ -138,7 +139,7 @@ class FitmentEvaluationRound extends Component {
                     class="form-check-input"
                     type="checkbox"
                     name="isWritingBlogs"
-                    value={formData.isWritingBlogs}
+                    checked={formData.isWritingBlogs}
                     onChange={this.handleInputChange}
                   />
                   <small class="form-text text-muted">Writing Blogs</small>
@@ -148,7 +149,7 @@ class FitmentEvaluationRound extends Component {
                     class="form-check-input"
                     type="checkbox"
                     name="isOpenSourceProjects"
-                    value={formData.isOpenSourceProjects}
+                    checked={formData.isOpenSourceProjects}
                     onChange={this.handleInputChange}
                   />
                   <small class="form-text text-muted">
@@ -160,7 +161,7 @@ class FitmentEvaluationRound extends Component {
                     class="form-check-input"
                     type="checkbox"
                     name="isAnyConference"
-                    value={formData.isAnyConference}
+                    checked={formData.isAnyConference}
                     onChange={this.handleInputChange}
                   />
                   <small class="form-text text-muted">
@@ -173,7 +174,7 @@ class FitmentEvaluationRound extends Component {
                     class="form-check-input"
                     type="checkbox"
                     name="isTechnicalCertifications"
-                    value={formData.isTechnicalCertifications}
+                    checked={formData.isTechnicalCertifications}
                     onChange={this.handleInputChange}
                   />
                   <small class="form-text text-muted">
