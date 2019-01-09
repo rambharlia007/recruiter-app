@@ -102,6 +102,12 @@ app.post("/applicant", (req, res) => {
     });
 });
 
+app.post(
+  "/interviewprocess/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {}
+);
+
 app.listen(5000, () => {
   console.log("app now listening for requests on port 5000");
 });
