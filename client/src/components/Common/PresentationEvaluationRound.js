@@ -19,7 +19,11 @@ class PresentationEvaluationRound extends Component {
   }
 
   changeStatus(data, index) {
-    this.props.PresentationEvaluationCallback();
+    const currentState = this.state;
+    currentState.status = data.value;
+    currentState.statusColor = data.color;
+    this.setState(currentState);
+    this.props.PresentationEvaluationCallback(currentState);
   }
 
   componentDidMount() {}
@@ -33,12 +37,25 @@ class PresentationEvaluationRound extends Component {
     });
   }
 
-  handleInputChange(event, index) {}
-
   addNewSkills() {
     const skills = this.state.skills;
     skills.push({ name: "", rating: "" });
     this.setState({ skills: skills });
+  }
+
+  saveChanges() {
+    this.props.saveCallback(this.state, 6);
+  }
+
+  handleTechInputChange(event, index) {
+    const data = this.state.skills;
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    data[index][name] = value;
+    this.setState({
+      skills: data
+    });
   }
 
   render() {
@@ -52,15 +69,31 @@ class PresentationEvaluationRound extends Component {
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <small class="form-text text-muted">Skills</small>
-                    <input type="text" class="form-control form-control-sm" />
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      name="name"
+                      value={data.name}
+                      onChange={e => {
+                        this.handleTechInputChange(e, index);
+                      }}
+                    />
                   </div>
                   <div class="form-group col-md-4">
                     <small class="form-text text-muted">Rating</small>
-                    <select class="form-control form-control-sm">
+                    <select
+                      class="form-control form-control-sm"
+                      name="rating"
+                      value={data.rating}
+                      onChange={e => {
+                        this.handleTechInputChange(e, index);
+                      }}
+                    >
                       <option selected>1</option>
                       <option>2</option>
                       <option>3</option>
                       <option>4</option>
+                      <option>5</option>
                     </select>
                   </div>
                 </div>
@@ -79,24 +112,112 @@ class PresentationEvaluationRound extends Component {
             </div>
             <div class="form-group">
               <small class="form-text text-muted">Content/Code</small>
-              <textarea class="form-control" rows="2" />
+              <textarea
+                class="form-control"
+                rows="2"
+                name="contentOrCode"
+                value={this.state.contentOrCode}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }}
+              />
             </div>
             <div class="form-group">
               <small class="form-text text-muted">Communication</small>
-              <textarea class="form-control" rows="2" />
+              <textarea
+                class="form-control"
+                rows="2"
+                name="communication"
+                value={this.state.communication}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }}
+              />
             </div>
             <div class="form-group">
               <small class="form-text text-muted">Energy</small>
-              <textarea class="form-control" rows="2" />
+              <textarea
+                class="form-control"
+                rows="2"
+                name="energy"
+                value={this.state.energy}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }}
+              />
             </div>
             <div class="form-group">
               <small class="form-text text-muted">Attitude</small>
-              <textarea class="form-control" rows="2" />
+              <textarea
+                class="form-control"
+                rows="2"
+                name="attitude"
+                value={this.state.attitude}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }}
+              />
             </div>
             <div class="form-group">
               <small class="form-text text-muted">Comments</small>
-              <textarea class="form-control" rows="1" />
+              <textarea
+                class="form-control"
+                rows="1"
+                name="comments"
+                value={this.state.comments}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }}
+              />
             </div>
+
+            <div class="dropdown display-inline">
+              <button
+                class="btn btn-default dropdown-toggle btn-sm"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Status
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a
+                  class="dropdown-item"
+                  onClick={() => {
+                    this.changeStatus(statusData.inprogress);
+                  }}
+                >
+                  In progress
+                </a>
+                <a
+                  class="dropdown-item"
+                  onClick={e => {
+                    this.changeStatus(statusData.rejected);
+                  }}
+                >
+                  Rejected
+                </a>
+                <a
+                  class="dropdown-item"
+                  onClick={e => {
+                    this.changeStatus(statusData.approved);
+                  }}
+                >
+                  Approved
+                </a>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-default btn-sm"
+              onClick={e => {
+                this.saveChanges();
+              }}
+            >
+              Save Changes
+            </button>
           </div>
         </div>
       )

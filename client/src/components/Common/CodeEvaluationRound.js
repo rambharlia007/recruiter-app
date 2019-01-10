@@ -18,8 +18,12 @@ class CodeEvaluationRound extends Component {
     this.state = props.data;
   }
 
-  changeStatus(data, index) {
-    this.props.codeEvaluationCallback();
+  changeStatus(data) {
+    const currentState = this.state;
+    currentState.status = data.value;
+    currentState.statusColor = data.color;
+    this.setState(currentState);
+    this.props.codeEvaluationCallback(currentState);
   }
 
   componentDidMount() {}
@@ -31,20 +35,8 @@ class CodeEvaluationRound extends Component {
     this.setState({
       [name]: value
     });
-  }
-
-  handleInputChange(event, index) {
-    const target = event.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-    const rnds = this.state.rounds;
-    rnds[index][name] = value;
-    this.setState({
-      rounds: rnds
-    });
-
     if (name == "rating") {
-      this.props.techCallback(rnds);
+      this.props.techCallback(this.state);
     }
   }
 
@@ -52,6 +44,21 @@ class CodeEvaluationRound extends Component {
     const tech = this.state.technologies;
     tech.push({ name: "", rating: "" });
     this.setState({ technologies: tech });
+  }
+
+  saveChanges() {
+    this.props.saveCallback(this.state, 3);
+  }
+
+  handleTechInputChange(event, index) {
+    const data = this.state.technologies;
+    const target = event.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+    data[index][name] = value;
+    this.setState({
+      technologies: data
+    });
   }
 
   render() {
@@ -65,15 +72,31 @@ class CodeEvaluationRound extends Component {
                 <div class="form-row">
                   <div class="form-group col-md-6">
                     <small class="form-text text-muted">Technology</small>
-                    <input type="text" class="form-control form-control-sm" />
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      name="name"
+                      value={data.name}
+                      onChange={e => {
+                        this.handleTechInputChange(e, index);
+                      }}
+                    />
                   </div>
                   <div class="form-group col-md-4">
                     <small class="form-text text-muted">Rating</small>
-                    <select class="form-control form-control-sm">
-                      <option selected>1</option>
-                      <option>2</option>
-                      <option>3</option>
-                      <option>4</option>
+                    <select
+                      class="form-control form-control-sm"
+                      name="rating"
+                      value={data.rating}
+                      onChange={e => {
+                        this.handleTechInputChange(e, index);
+                      }}
+                    >
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
                     </select>
                   </div>
                 </div>
@@ -93,8 +116,64 @@ class CodeEvaluationRound extends Component {
 
             <div class="form-group">
               <small class="form-text text-muted">Comments</small>
-              <textarea class="form-control" rows="1" />
+              <textarea
+                class="form-control"
+                rows="1"
+                name="comments"
+                value={this.state.comments}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }}
+              />
             </div>
+
+            <div class="dropdown display-inline">
+              <button
+                class="btn btn-default dropdown-toggle btn-sm"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Status
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a
+                  class="dropdown-item"
+                  onClick={() => {
+                    this.changeStatus(statusData.inprogress);
+                  }}
+                >
+                  In progress
+                </a>
+                <a
+                  class="dropdown-item"
+                  onClick={e => {
+                    this.changeStatus(statusData.rejected);
+                  }}
+                >
+                  Rejected
+                </a>
+                <a
+                  class="dropdown-item"
+                  onClick={e => {
+                    this.changeStatus(statusData.approved);
+                  }}
+                >
+                  Approved
+                </a>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-default btn-sm"
+              onClick={e => {
+                this.saveChanges();
+              }}
+            >
+              Save Changes
+            </button>
           </div>
         </div>
       )

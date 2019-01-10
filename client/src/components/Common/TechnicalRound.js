@@ -15,15 +15,15 @@ const formData = {
   isVisible: false,
   name: "",
   commentValue: ""
-}
+};
 
 const statusData = {
   inprogress: { color: "orange", value: "inprogress" },
   ready: { color: "yellow", value: "ready" },
   onhold: { color: "lightgreen", value: "onhold" },
   rejected: { color: "red", value: "rejected" },
-  approved: { color: "green", value: "approved" },
-}
+  approved: { color: "green", value: "approved" }
+};
 
 class TechnicalRound extends Component {
   constructor(props) {
@@ -67,11 +67,10 @@ class TechnicalRound extends Component {
     if (name == "rating") {
       this.props.techCallback(rnds);
     }
-
   }
 
   _handleKeyPress(e, index) {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       const name = e.target.name;
       var rnds = this.state.rounds;
@@ -87,83 +86,126 @@ class TechnicalRound extends Component {
     }
   }
 
+  saveChanges() {
+    this.props.saveCallback(this.state, 2);
+  }
+
   render() {
-    return (<div>
-      {this.state.rounds.map((row, index) => (
-        row.isVisible && <div className="card" key={index}>
-          <div className={"card-body " + row.disableClass}>
-            <h5 className="card-title">{row.name}</h5>
-            <div>
-              <div class="form-group">
-                <small className="form-text text-muted">
-                  Rating
-            </small>
-                <select class="form-control" name="rating" value={row.rating}
-                  onChange={(e) => { this.handleInputChange(e, index) }}>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </div>
-              <small class="form-text text-muted">
-                Skills
-            </small>
-              <div className="custom-div">
-                <input type="text" placeholder="add skills and hit enter"
-                  class="form-control form-control-sm col-md-5 mb5" name="skillValue"
-                  value={row.skillValue}
-                  onKeyPress={(e) => { this._handleKeyPress(e, index) }}
-                  onChange={(e) => { this.handleInputChange(e, index) }} />
-                {row.skills.map((dv) => {
-                  return <span class="badge badge-secondary1 mr5">{dv}</span>
-                })}
-              </div>
-              <div class="form-group">
-                <small class="form-text text-muted">
-                  Comments
-            </small>
-                <textarea class="form-control" rows="1"
-                  name="comments"
-                  value={row.comments}
-                  onChange={(e) => { this.handleInputChange(e, index) }}
-                />
-              </div>
-              <div class="dropdown">
-                <button
-                  class="btn btn-default dropdown-toggle btn-sm"
-                  type="button"
-                  id="dropdownMenuButton"
-                  data-toggle="dropdown"
-                  aria-haspopup="true"
-                  aria-expanded="false"
-                >
-                  Status
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" onClick={() => {
-                    this.changeStatus(statusData.inprogress, index)
-                  }}>
-                    In progress
-                  </a>
-                  <a class="dropdown-item" onClick={(e) => {
-                    this.changeStatus(statusData.rejected, index)
-                  }}>
-                    Rejected
-                  </a>
-                  <a class="dropdown-item" onClick={(e) => {
-                    this.changeStatus(statusData.approved, index)
-                  }}>
-                    Approved
-                  </a>
+    return (
+      <div>
+        {this.state.rounds.map(
+          (row, index) =>
+            row.isVisible && (
+              <div className="card" key={index}>
+                <div className={"card-body " + row.disableClass}>
+                  <h5 className="card-title">{row.name}</h5>
+                  <div>
+                    <div class="form-group">
+                      <small className="form-text text-muted">Rating</small>
+                      <select
+                        class="form-control"
+                        name="rating"
+                        value={row.rating}
+                        onChange={e => {
+                          this.handleInputChange(e, index);
+                        }}
+                      >
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                      </select>
+                    </div>
+                    <small class="form-text text-muted">Skills</small>
+                    <div className="custom-div">
+                      <input
+                        type="text"
+                        placeholder="add skills and hit enter"
+                        class="form-control form-control-sm col-md-5 mb5"
+                        name="skillValue"
+                        value={row.skillValue}
+                        onKeyPress={e => {
+                          this._handleKeyPress(e, index);
+                        }}
+                        onChange={e => {
+                          this.handleInputChange(e, index);
+                        }}
+                      />
+                      {row.skills.map(dv => {
+                        return (
+                          <span class="badge badge-secondary1 mr5">{dv}</span>
+                        );
+                      })}
+                    </div>
+                    <div class="form-group">
+                      <small class="form-text text-muted">Comments</small>
+                      <textarea
+                        class="form-control"
+                        rows="1"
+                        name="comments"
+                        value={row.comments}
+                        onChange={e => {
+                          this.handleInputChange(e, index);
+                        }}
+                      />
+                    </div>
+                    <div class="dropdown display-inline">
+                      <button
+                        class="btn btn-default dropdown-toggle btn-sm"
+                        type="button"
+                        id="dropdownMenuButton"
+                        data-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                      >
+                        Status
+                      </button>
+                      <div
+                        class="dropdown-menu"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        <a
+                          class="dropdown-item"
+                          onClick={() => {
+                            this.changeStatus(statusData.inprogress, index);
+                          }}
+                        >
+                          In progress
+                        </a>
+                        <a
+                          class="dropdown-item"
+                          onClick={e => {
+                            this.changeStatus(statusData.rejected, index);
+                          }}
+                        >
+                          Rejected
+                        </a>
+                        <a
+                          class="dropdown-item"
+                          onClick={e => {
+                            this.changeStatus(statusData.approved, index);
+                          }}
+                        >
+                          Approved
+                        </a>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      class="btn btn-default btn-sm"
+                      onClick={e => {
+                        this.saveChanges();
+                      }}
+                    >
+                      Save Changes
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
+            )
+        )}
+      </div>
     );
   }
 }
