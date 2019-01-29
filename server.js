@@ -30,18 +30,6 @@ app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
-
-// Server static assets if in production
-if (process.env.NODE_ENV === 'production') {
-  // Set static folder
-  app.use(express.static('client/build'));
-
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  });
-}
-
 const port = process.env.PORT || 5000;
 
 
@@ -67,14 +55,9 @@ mongoose
 // set up routes
 app.use("/auth", authRoutes);
 
-// create home route
-app.get("/", (req, res) => {
-  res.render("home", { user: req.user });
-});
-
 app.get(
   "/protected",
-  passport.authenticate("jwt", { session: false }),
+  //passport.authenticate("jwt", { session: false }),
   (req, res) => {
     console.log("In protected method");
     Interviewee.find({}, function (err, interviewers) {
@@ -88,7 +71,7 @@ app.get(
 
 app.get(
   "/user",
-  passport.authenticate("jwt", { session: false }),
+  //passport.authenticate("jwt", { session: false }),
   (req, res) => {
     User.find({}, function (err, users) {
       if (err) res.status(500).send("Internal server error");
@@ -123,6 +106,12 @@ app.get(
     });
   }
 );
+
+
+app.get("/test", (req,res)=>{
+  console.log("in test method");
+   res.redirect("/list/applicant");
+}) 
 
 app.get(
   "/interviewprocess/:id",
@@ -188,6 +177,17 @@ app.post('/upload', upload.single("file"), function (req, res, next) {
   // req.body will hold the text fields, if there were any
 })
 
+
+//Server static assets if in production
+if (true || process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static('client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  }); 
+}
+
 app.listen(port, () => {
-  console.log("app now listening for requests on port 5000");
+  console.log(`app now listening for requests on port ${port}`);
 });
