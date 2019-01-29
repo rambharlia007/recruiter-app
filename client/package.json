@@ -19,7 +19,7 @@
     "mdbreact": "^4.6.1",
     "moment": "^2.23.0",
     "namor": "^1.0.1",
-    "query-string": "^6.2.0",
+    "query-string": "^5.1.1",
     "react": "^16.4.2",
     "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.4.2",
