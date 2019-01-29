@@ -15,13 +15,29 @@ const cors = require("cors");
 const dummy = require("./dummy.json");
 const app = express();
 
+var request = require('request');
+var fs = require('fs');
+
 app.use(cors());
+app.use(express.static('public'))
 
 // initialize passport
 app.use(passport.initialize());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+
+var multer = require('multer')
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
+  }
+})
+const upload = multer({ storage: storage })
 
 mongoose
   .connect(
@@ -141,6 +157,19 @@ app.post(
     );
   }
 );
+
+// app.post("/upload", (req, res) => {
+//   res.status(200).send("upload success");
+// })
+
+app.post('/upload', upload.single("file"), function (req, res, next) {
+  console.log(req.files);
+  console.log(req.file);
+  console.log(req.body);
+  res.status(200).send("upload success");
+  // req.file is the `avatar` file
+  // req.body will hold the text fields, if there were any
+})
 
 app.listen(5000, () => {
   console.log("app now listening for requests on port 5000");

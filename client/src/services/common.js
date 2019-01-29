@@ -14,7 +14,7 @@ export default class CommonService {
 
   isAdmin() {
     var role = this.getLocalStorageData("role");
-    return true; // role == "admin" || role == "super_admin";
+    return role == "admin" || role == "super_admin";
   }
 
   removeLocalStorageData() {

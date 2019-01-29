@@ -5,6 +5,10 @@ import "bootstrap/dist/js/bootstrap.min.js";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
+
+import { FilePond, File, registerPlugin } from 'react-filepond';
+import 'filepond/dist/filepond.min.css';
+
 import {
   Container,
   Row,
@@ -82,7 +86,8 @@ class TempForm extends Component {
         minNoticePeriod: "2",
         maxNoticePeriod: "2",
         recruiter: "",
-        recruiterId: ""
+        recruiterId: "",
+        file: ""
       },
       interviewers: [],
       activeTab: this.tabs[0]
@@ -94,11 +99,11 @@ class TempForm extends Component {
     var self = this;
     axios
       .get(`http://localhost:5000/interviewer`)
-      .then(function(response) {
+      .then(function (response) {
         console.log(response.data);
         self.setState({ interviewers: response.data });
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   }
@@ -465,19 +470,28 @@ class TempForm extends Component {
                       </div>
                       <div class="tab-pane" id="tab-4" role="tabpanel">
                         <div class="form-group row">
-                          <label class="col-md-2 col-form-label">Resume</label>
-                          <div class="col-md-5">
-                            <input
-                              type="file"
-                              class="form-control-file"
-                              id="exampleFormControlFile1"
-                            />
+                          <small class="col-md-2 form-text text-muted">
+                            Resume
+                          </small>
+                          <div class="col-md-8">
+                            <FilePond ref={ref => this.pond = ref}
+                              allowMultiple={false}
+                              name={"file"}
+                              server="http://localhost:5000/upload"
+                              onupdatefiles={(fileItem) => {
+                                console.log(fileItem);
+                                // Set current file objects to this.state
+                                this.setState({
+                                  file: fileItem
+                                });
+                              }}>
+                            </FilePond>
                           </div>
                         </div>
                         <div class="form-group row">
-                          <label class="col-md-2 col-form-label">
+                          <small class="col-md-2 form-text text-muted">
                             Recruiter
-                          </label>
+                          </small>
                           <div class="col-md-5">
                             <select
                               class="form-control form-control-sm"
