@@ -98,7 +98,7 @@ class TempForm extends Component {
   componentDidMount() {
     var self = this;
     axios
-      .get(`http://localhost:5000/interviewer`)
+      .get(`/interviewer`)
       .then(function (response) {
         console.log(response.data);
         self.setState({ interviewers: response.data });
@@ -127,7 +127,7 @@ class TempForm extends Component {
     this.setState({ modalData: modalData });
     this.setRecruiterName();
     var postData = this.state.formData;
-    Axios.post("http://localhost:5000/applicant", postData)
+    Axios.post("/applicant", postData)
       .then(response => {
         this.setState({
           modalData: { title: "Success", body: "saved successfully." }
@@ -246,7 +246,7 @@ class TempForm extends Component {
                     class="btn btn-default"
                     onClick={() => {
                       window.location.href =
-                        "http://localhost:3000/list/applicant";
+                        "/list/applicant";
                     }}
                   >
                     Go to Dashboard

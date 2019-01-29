@@ -143,7 +143,7 @@ class Process extends Component {
     const values = queryString.parse(this.props.location.search);
     var self = this;
     axios
-      .get(`http://localhost:5000/user`, {
+      .get(`/user`, {
         headers: this.common.getTokenHeader()
       })
       .then(function(response) {
@@ -155,7 +155,7 @@ class Process extends Component {
       });
 
     axios
-      .get(`http://localhost:5000/interviewprocess/${values.id}`, {
+      .get(`/interviewprocess/${values.id}`, {
         headers: this.common.getTokenHeader()
       })
       .then(function(response) {
@@ -423,7 +423,7 @@ class Process extends Component {
   saveData() {
     var self = this;
     axios
-      .post(`http://localhost:5000/interviewprocess`, this.state, {
+      .post(`/interviewprocess`, this.state, {
         headers: this.common.getTokenHeader()
       })
       .then(function(response) {

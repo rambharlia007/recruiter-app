@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 const keys = require("./config/keys");
 const bodyParser = require("body-parser");
 
+const path = require('path');
+
+
 const User = require("./models/user-model");
 const Interviewee = require("./models/interviewee-model");
 const InterviewProcess = require("./models/interviewProcess-model");
@@ -26,6 +29,20 @@ app.use(passport.initialize());
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+
+
+// Server static assets if in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static('client/build'));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+  });
+}
+
+const port = process.env.PORT || 5000;
 
 
 var multer = require('multer')
@@ -171,6 +188,6 @@ app.post('/upload', upload.single("file"), function (req, res, next) {
   // req.body will hold the text fields, if there were any
 })
 
-app.listen(5000, () => {
+app.listen(port, () => {
   console.log("app now listening for requests on port 5000");
 });

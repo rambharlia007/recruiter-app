@@ -115,7 +115,7 @@ class Applicant extends Component {
     else {
       $(this.refs.main).DataTable({
         ajax: {
-          url: "http://localhost:5000/protected",
+          url: "/protected",
           type: "GET",
           headers: this.common.getTokenHeader(),
           dataSrc: function (json) {

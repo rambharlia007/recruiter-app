@@ -21,7 +21,7 @@ class Profile extends Component {
   getUserById = id => {
     var self = this;
     axios
-      .get(`http://localhost:5000/user/${id}`, {
+      .get(`/user/${id}`, {
         headers: this.common.getTokenHeader()
       })
       .then(function(response) {
@@ -51,7 +51,7 @@ class Profile extends Component {
       var self = this;
       this.table = $(this.refs.profile_grid).DataTable({
         ajax: {
-          url: "http://localhost:5000/user",
+          url: "/user",
           type: "GET",
           headers: this.common.getTokenHeader(),
           dataSrc: function(json) {
@@ -107,7 +107,7 @@ class Profile extends Component {
     var self = this;
     axios
       .patch(
-        `http://localhost:5000/user/${this.state.userData._id}`,
+        `/user/${this.state.userData._id}`,
         this.state.userData,
         {
           headers: this.common.getTokenHeader()
