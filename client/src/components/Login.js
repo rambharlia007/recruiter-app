@@ -64,7 +64,7 @@ class Login extends Component {
     var self = this;
     payload.role = this.common;
     axios
-      .post("http://localhost:5000/auth/login", payload)
+      .post("/auth/login", payload)
       .then(function(response) {
         self.setTokenAndRoles(response.data);
       })
