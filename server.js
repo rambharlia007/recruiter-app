@@ -22,7 +22,7 @@ var request = require('request');
 var fs = require('fs');
 
 app.use(cors());
-app.use(express.static('public'))
+
 
 // initialize passport
 app.use(passport.initialize());
@@ -177,13 +177,18 @@ app.post('/upload', upload.single("file"), function (req, res, next) {
   // req.body will hold the text fields, if there were any
 })
 
+// serve resume files
+app.get('/public/:name', (req,res)=>{
+  const fileName = req.params.name;
+  res.sendFile(path.resolve(__dirname, 'public', fileName));
+})
 
 //Server static assets if in production
 if (true || process.env.NODE_ENV === 'production') {
   // Set static folder
   app.use(express.static('client/build'));
-
   app.get('*', (req, res) => {
+    console.log("In file method");
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   }); 
 }
