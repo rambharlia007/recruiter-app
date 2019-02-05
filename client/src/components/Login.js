@@ -8,6 +8,9 @@ import GoogleLogin from "react-google-login";
 import FacebookLogin from "react-facebook-login";
 import decode from "jwt-decode";
 
+import MicrosoftLogin from "react-microsoft-login";
+import keys from "../config/keys";
+
 class Login extends Component {
   state = { userName: "", password: "", isUserLoggedIn: false };
 
@@ -16,30 +19,14 @@ class Login extends Component {
     this.commonService = new CommonService();
   }
 
+
+
+
   HandleInputChange = event => {
     var name = event.target.name;
     this.setState({
       [name]: event.target.value
     });
-  };
-
-  AuthenticatePassport = () => {
-    //window.open("http://localhost:5000/auth/google","_self");
-    let headers = {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "http://localhost:5000",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE",
-      "Access-Control-Allow-Headers": "X-Requested-With,content-type",
-      "Access-Control-Allow-Credentials": true
-    };
-    axios
-      .get("http://localhost:5000/auth/google", headers)
-      .then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
   };
 
   Authenticate = () => {
@@ -65,10 +52,10 @@ class Login extends Component {
     payload.role = this.common;
     axios
       .post("/auth/login", payload)
-      .then(function(response) {
+      .then(function (response) {
         self.setTokenAndRoles(response.data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   };
@@ -96,6 +83,18 @@ class Login extends Component {
     this.AuthenticateSocial(user);
   };
 
+
+  outlookAuthHandler = (err, response) => {
+    var user = {
+      userName: response.displayName,
+      emailId: response.userPrincipalName,
+      socialId: response.id,
+      imageUrl: "",
+      phoneNumber: response.mobilePhone
+    };
+    this.AuthenticateSocial(user);
+  }
+
   render() {
     if (this.props.isAuthenticated && this.commonService.isAdmin()) {
       return <Redirect to="/list/applicant" />;
@@ -106,90 +105,41 @@ class Login extends Component {
       <div class="login-padding">
         <div class="row justify-content-center">
           <div class="col-md-4 align-self-center align-items-center">
+           
+
             <div class="card">
               <div class="card-body">
-                <form>
-                  <div class="login-header div-logo">
-                    <a href="javascript:void(0)">
-                      <img class="logo" src="../../images/logo1.png" />
-                    </a>
-                  </div>
-                  <div class="form-group">
-                    <input
-                      type="email"
-                      class="form-control"
-                      name="userName"
-                      placeholder="Enter email"
-                      value={this.state.userName}
-                      onChange={this.HandleInputChange}
-                    />
-                  </div>
-                  <div class="form-group">
-                    <input
-                      type="password"
-                      class="form-control"
-                      name="password"
-                      placeholder="Password"
-                      value={this.state.password}
-                      onChange={this.HandleInputChange}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    class="btn btn-success btn-block text-left"
-                    onClick={() => {
-                      this.Authenticate();
+
+                <h3 class="form-signin-heading">Devon</h3>
+
+                <small class="text-muted">Connect DevOn Recruiter App with your favorite social network</small>
+
+                <div className="col-md-12 pt15 pl0">
+                  <GoogleLogin
+                    clientId={keys.google.clientID}
+                    onSuccess={data => {
+                      this.responseGoogle(data);
                     }}
-                    disabled={!(this.state.userName && this.state.password)}
+                    onFailure={this.responseGoogle}
                   >
-                    <span class="pull-left">
-                      {/* <i class="fa fa-lock" /> */}
-                      Log In
-                    </span>
-                    {/* <i class="fa fa-lg fa-spinner fa-spin pull-right" /> */}
-                  </button>
-                </form>
+                    <i class="fab fa-google"></i>
+                    <span className="pl10"> Sign in with Google</span>
+                  </GoogleLogin>
+                </div>
+                <div className="col-md-12 pt15 pl0">
+                  <MicrosoftLogin
+                    authCallback={this.outlookAuthHandler}
+                    withUserData={true}
+                    clientId={keys.outlook.clientID}
+                    authCallback={this.outlookAuthHandler}
+                    graphScopes={["user.read"]}
+                  />
+                </div>
               </div>
             </div>
-            <div className="col-md-12 pt15 pl0">
-              <GoogleLogin
-                clientId="225239235499-2kcl83lbn7tdga1rhahkg62k5qm9i1ii.apps.googleusercontent.com"
-                buttonText="Login with Google"
-                onSuccess={data => {
-                  this.responseGoogle(data);
-                }}
-                onFailure={this.responseGoogle}
-              />
-            </div>
-            <div className="col-md-12 pt15 pl0">
-              <FacebookLogin
-                appId="697493127302600"
-                autoLoad={false}
-                fields="name,email,picture"
-                callback={data => {
-                  this.responseFacebook(data);
-                }}
-                cssClass="btn-facebook"
-                icon="fa-facebook"
-                size="btn-lg"
-              />
-            </div>
-            <button
-              type="submit"
-              class="btn btn-success btn-block text-left"
-              onClick={() => {
-                this.AuthenticatePassport();
-              }}
-            >
-              <span class="pull-left">
-                {/* <i class="fa fa-lock" /> */}
-                Passport
-              </span>
-              {/* <i class="fa fa-lg fa-spinner fa-spin pull-right" /> */}
-            </button>
           </div>
         </div>
-      </div>
+      </div >
     );
   }
 }

@@ -87,7 +87,8 @@ class TempForm extends Component {
         maxNoticePeriod: "2",
         recruiter: "",
         recruiterId: "",
-        file: ""
+        file: "",
+        resume:""
       },
       interviewers: [],
       activeTab: this.tabs[0]
@@ -481,8 +482,10 @@ class TempForm extends Component {
                               onupdatefiles={(fileItem) => {
                                 console.log(fileItem);
                                 // Set current file objects to this.state
+                                const formData = this.state.formData;
+                                formData.resume = fileItem[0].filename;
                                 this.setState({
-                                  file: fileItem
+                                  formData : formData
                                 });
                               }}>
                             </FilePond>

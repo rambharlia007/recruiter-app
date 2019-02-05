@@ -18,6 +18,7 @@
     "lodash": "^4.17.10",
     "mdbreact": "^4.6.1",
     "moment": "^2.23.0",
+    "msal": "^0.2.4",
     "namor": "^1.0.1",
     "query-string": "^5.1.1",
     "react": "^16.4.2",
@@ -26,11 +27,13 @@
     "react-facebook-login": "^4.1.1",
     "react-filepond": "^5.0.0",
     "react-google-login": "^3.2.1",
+    "react-microsoft-login": "^1.1.1",
     "react-router-dom": "^4.3.1",
     "react-scripts": "^1.1.4",
     "react-table": "6.8.5",
     "react-tooltip": "^3.6.1",
-    "select2": "^4.0.6-rc.1"
+    "select2": "^4.0.6-rc.1",
+    "socket.io-client": "^2.2.0"
   },
   "scripts": {
     "start": "react-scripts start",

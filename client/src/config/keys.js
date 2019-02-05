@@ -8,16 +8,21 @@
       "mongodb+srv://rambharlia:11gaei5034@cluster0-rjpcq.mongodb.net/recruiter-app?retryWrites=true"
   }
 
+  const outlook = {
+    clientID : "4abf3e04-17cf-415c-b02b-e357944d03c8"
+  }
 
 const production = {
   server : "https://devon-recruiter-app.herokuapp.com",
   google,
-  mongodb
+  mongodb,
+  outlook
 }
 const dev = {
   server : "http://localhost:5000",
   google,
-  mongodb
+  mongodb,
+  outlook
 }
 
 if(process.env.NODE_ENV === 'production'){

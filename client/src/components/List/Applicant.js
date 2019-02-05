@@ -5,6 +5,9 @@ import CommonService from "../../services/common";
 import { Bar } from "react-chartjs-2";
 import moment from "moment";
 import "daterangepicker/daterangepicker.css";
+
+import keys from "../../config/keys";
+
 var $ = require("jquery");
 require("datatables.net");
 require("daterangepicker");
@@ -133,7 +136,6 @@ class Applicant extends Component {
           {
             data: "name",
             render: function (data, type, row, meta) {
-              console.log(row);
               return `<span><a href="${window.location.origin}/new/process?id=${
                 row._id
                 }&rid=${row.recruiterId}">${data}</a></span>`;
@@ -144,7 +146,15 @@ class Applicant extends Component {
           { data: "organisation" },
           { data: "designation" },
           { data: "skillSet" },
-          { data: "minNoticePeriod" }
+          { data: "minNoticePeriod" },
+          {
+            width:"30%",
+            data: "resume",
+            render: function (data, type, row, meta) {
+              return `<span><a style="text-overflow: ellipsis;" target="_blank" href="${keys.server}/public/${
+                row.resume}">${data}</a></span>`;
+            }
+          },
         ],
         lengthMenu: [[15, 20, 25, 30, 100], [15, 20, 25, 30, 100]]
       });
@@ -258,6 +268,7 @@ class Applicant extends Component {
                         <th>Designation</th>
                         <th>Skills</th>
                         <th>NoticePeriod</th>
+                        <th>resume</th>
                       </tr>
                     </thead>
                   </table>{" "}

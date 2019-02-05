@@ -3,11 +3,13 @@ const passport = require("passport");
 const jwt = require("jsonwebtoken");
 const opts = require("../config/jwt-config");
 const User = require("../models/user-model");
-//const goog = require("../config/passport-google-setup");
+const google = require("../config/passport-google-setup");
 
-// auth login
-router.post("/login", (req, res) => {
-  let data = req.body;
+
+function generateToken(req, res) {
+  let data = req.profile;
+  console.log("in generate token");
+  console.log(data.id);
   var curentUser = {
     username: data.userName,
     socialId: data.socialId,
@@ -38,7 +40,48 @@ router.post("/login", (req, res) => {
         return res.status(200).json({
           message: "Auth Passed",
           token,
-          id:user._id
+          id:user._id,
+          data:data
+        });
+      }
+    }
+  );
+}
+
+// auth login
+router.post("/login", (req, res) => {
+  let data = req.body;
+  var curentUser = {
+    username: data.userName,
+    socialId: data.socialId,
+    imageUrl: data.imageUrl,
+    emailId: data.emailId,
+    phoneNumber: data.phoneNumber
+    //  role: data.role
+  };
+  User.findOneAndUpdate(
+    { emailId: data.emailId },
+    curentUser,
+    {
+      upsert: true,
+      new: true,
+      overwrite: false
+    },
+    function (err, user) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send("Internal server error");
+      } else {
+        curentUser.role = user.role;
+        const token = jwt.sign(
+          curentUser,
+          opts.secretOrKey,
+          opts.createOptions
+        );
+        return res.status(200).json({
+          message: "Auth Passed",
+          token,
+          id: user._id
         });
       }
     }
@@ -56,7 +99,7 @@ router.get(
   "/google",
   passport.authenticate("google", {
     session: false,
-    scope: ["profile"]
+    scope: ["profile","email"]
   })
 );
 
@@ -67,9 +110,7 @@ router.get(
   passport.authenticate("google", {
     session: false
   }),
-  (req, res) => {
-    res.send("res");
-  }
+  generateToken
 );
 
 module.exports = router;

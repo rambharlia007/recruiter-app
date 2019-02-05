@@ -4,9 +4,15 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
   username: String,
   socialId: String,
-  imageUrl: String,
+  imageUrl: {
+    type: String,
+    default: 'not available'
+  },
   emailId: String,
-  role: String,
+  role: {
+    type: String,
+    default: 'public'
+  },
   phoneNumber: String
 });
 

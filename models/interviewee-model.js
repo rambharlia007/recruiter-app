@@ -24,7 +24,8 @@ const intervieweeSchema = new Schema({
   minNoticePeriod: Number,
   maxNoticePeriod: Number,
   recruiter: String,
-  recruiterId: String
+  recruiterId: String,
+  resume:String
 });
 
 const Interviewee = mongoose.model("interviewee", intervieweeSchema);

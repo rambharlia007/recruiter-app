@@ -5,6 +5,9 @@ import "datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css";
 import CommonService from "../../services/common";
 import "bootstrap/dist/js/bootstrap.min.js";
 import axios from "axios";
+
+import keys from "../../config/keys";
+
 var $ = require("jquery");
 require("datatables.net");
 
@@ -21,7 +24,7 @@ class Profile extends Component {
   getUserById = id => {
     var self = this;
     axios
-      .get(`/user/${id}`, {
+      .get(`${keys.server}/user/${id}`, {
         headers: this.common.getTokenHeader()
       })
       .then(function(response) {
@@ -107,7 +110,7 @@ class Profile extends Component {
     var self = this;
     axios
       .patch(
-        `/user/${this.state.userData._id}`,
+        `${keys.server}/user/${this.state.userData._id}`,
         this.state.userData,
         {
           headers: this.common.getTokenHeader()
@@ -141,7 +144,7 @@ class Profile extends Component {
           </div>
         </div>
         <div className="row justify-content-md-center pt15">
-          <div className="col-md-11">
+          <div className="col-md-11 pb15">
             <div className="card">
               <div className="card-body">
                 <table
@@ -211,7 +214,7 @@ class Profile extends Component {
               <div class="modal-footer">
                 <button
                   type="button"
-                  class="btn btn-danger"
+                  className="btn btn-default btn-sm"
                   onClick={() => {
                     this.changeRole();
                   }}
