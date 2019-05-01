@@ -39,6 +39,10 @@ const options = {
         id: "y-axis-1",
         gridLines: {
           display: false
+        },
+        ticks: {
+          beginAtZero: true,
+          min: 0
         }
       }
     ]
