@@ -19,10 +19,14 @@ class MdCdlEvaluationRound extends Component {
   }
 
   changeStatus(data, index) {
-    this.props.mdCdlEvaluationCallback();
+    const currentState = this.state;
+    currentState.status = data.value;
+    currentState.statusColor = data.color;
+    this.setState(currentState);
+    this.props.mdCdlEvaluationCallback(currentState, this.props.roundTypeId);
   }
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   handleInputChange(event) {
     const target = event.target;
@@ -33,7 +37,9 @@ class MdCdlEvaluationRound extends Component {
     });
   }
 
-  handleInputChange(event, index) {}
+  saveChanges() {
+    this.props.saveCallback(this.state, this.props.roundTypeId);
+  }
 
   render() {
     return (
@@ -43,8 +49,60 @@ class MdCdlEvaluationRound extends Component {
             <h5 class="card-title">{this.props.data.name}</h5>
             <div class="form-group">
               <small class="form-text text-muted">Comments</small>
-              <textarea class="form-control" rows="1" />
+              <textarea class="form-control" rows="1"
+                name="comments"
+                value={this.state.comments}
+                onChange={e => {
+                  this.handleInputChange(e);
+                }} />
             </div>
+            <div class="dropdown display-inline">
+              <button
+                class="btn btn-default dropdown-toggle btn-sm"
+                type="button"
+                id="dropdownMenuButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Status
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a
+                  class="dropdown-item"
+                  onClick={() => {
+                    this.changeStatus(statusData.inprogress);
+                  }}
+                >
+                  In progress
+                </a>
+                <a
+                  class="dropdown-item"
+                  onClick={e => {
+                    this.changeStatus(statusData.rejected);
+                  }}
+                >
+                  Rejected
+                </a>
+                <a
+                  class="dropdown-item"
+                  onClick={e => {
+                    this.changeStatus(statusData.approved);
+                  }}
+                >
+                  Approved
+                </a>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-default btn-sm"
+              onClick={e => {
+                this.saveChanges();
+              }}
+            >
+              Save Changes
+            </button>
           </div>
         </div>
       )

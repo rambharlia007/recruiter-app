@@ -8,20 +8,18 @@ const bodyParser = require("body-parser");
 
 const path = require('path');
 
-
+const _ = require('underscore');
 const User = require("./models/user-model");
 const Interviewee = require("./models/interviewee-model");
 const InterviewProcess = require("./models/interviewProcess-model");
 
+
+var async = require("async");
 const cors = require("cors");
 
-const dummy = require("./dummy.json");
 const app = express();
 
-var request = require('request');
-var fs = require('fs');
 
-var socket = require("socket.io");
 
 app.use(cors());
 
@@ -123,6 +121,70 @@ app.patch(
   }
 );
 
+app.get("/applicationByRecruiter", (req, res) => {
+  const aggregatorOpts = [
+    {
+      $group: {
+        _id: '$recruiter',
+        count: { $sum: 1 }
+      }
+    }
+  ]
+  Interviewee.aggregate(aggregatorOpts, (err, data) => {
+    res.send(data);
+  })
+})
+
+function getGroupingKeys(key) {
+  return [
+    {
+      $group: {
+        _id: key,
+        count: { $sum: 1 }
+      }
+    },
+  ];
+}
+
+app.get("/applicationByInterviewer", (req, res) => {
+  async.parallel([
+    function (callback) {
+      InterviewProcess.aggregate(getGroupingKeys('$presentationEvaluationRound.assignedTo'), (err, data) => {
+        callback(null, data)
+      });
+    },
+    function (callback) {
+      InterviewProcess.aggregate(getGroupingKeys('$technicalRound.assignedTo'), (err, data) => {
+        callback(null, data)
+      });
+    },
+    function (callback) {
+      InterviewProcess.aggregate(getGroupingKeys('$codeEvaluationRound.assignedTo'), (err, data) => {
+        callback(null, data)
+      });
+    }
+  ], function (err, data) {
+    var result = [];
+    _.each(data, function (val) {
+      _.each(val, function (innerData) {
+        result.push(innerData);
+      });
+    });
+
+    // res.send(result);
+    res.send(_.mapObject(_.groupBy(result, '_id'), function (val) {
+      return _.reduce(val, function (memo, num) { return memo + num.count; }, 0);
+    })
+    );
+  })
+})
+
+
+app.get("/applicationByStatus", function (req, res) {
+  Interviewee.aggregate(getGroupingKeys('$status'), (err, data) => {
+    res.send(data);
+  });
+})
 
 app.get(
   "/interviewprocess/:id",
@@ -138,6 +200,13 @@ app.get(
 );
 
 
+app.put("/Interviewee/:id", (req, res) => {
+  const id = req.params.id;
+  const status = req.body.status;
+  Interviewee.updateOne({ _id: id }, { status: status }, (err, data) => {
+    res.send("status update done");
+  })
+})
 
 app.post("/applicant", (req, res) => {
   var interviewee = new Interviewee(req.body);
@@ -180,11 +249,11 @@ app.post(
 // })
 
 app.post('/upload', upload.single("file"), function (req, res, next) {
-  res.status(200).send({fileName:req.file.originalname});
+  res.status(200).send({ fileName: req.file.originalname });
 })
 
 // serve resume files
-app.get('/public/:name', (req,res)=>{
+app.get('/public/:name', (req, res) => {
   const fileName = req.params.name;
   res.sendFile(path.resolve(__dirname, 'public', fileName));
 })
@@ -195,11 +264,10 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  }); 
+  });
 }
 
 var server = app.listen(port, () => {
   console.log(`app now listening for requests on port ${port}`);
 });
 
-var io = socket(server);

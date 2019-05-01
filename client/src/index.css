@@ -176,3 +176,6 @@ body {
 .pb15{
   padding-bottom: 15px !important;
 }
+td{
+  text-align: center !important
+}

@@ -61,7 +61,9 @@ class TempForm extends Component {
       //   hike: "",
       //   otherOffers: "",
       //   minNoticePeriod: "",
-      //   maxNoticePeriod: ""
+      //   maxNoticePeriod: "",
+      //   emailId: "",
+      //   phoneNumber: ""
       // },
       formData: {
         name: "Ram",
@@ -88,7 +90,9 @@ class TempForm extends Component {
         recruiter: "",
         recruiterId: "",
         file: "",
-        resume:""
+        resume: "",
+        emailId: "test@gmail.com",
+        phoneNumber: "747734827473"
       },
       interviewers: [],
       activeTab: this.tabs[0]
@@ -262,7 +266,7 @@ class TempForm extends Component {
               {this.renderListGroup()}
             </div>
           </div>
-          <Col md="6">
+          <Col md="6" className="pb15">
             <Card style={{ minHeight: "650px" }}>
               <CardBody>
                 <div class="row">
@@ -286,6 +290,24 @@ class TempForm extends Component {
                               label="DOB (dd/mm/yyyy)"
                               name="dateOfBirth"
                               value={formData.dateOfBirth}
+                              onChange={this.handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-12">
+                            <Input
+                              type="text"
+                              label="Email Id"
+                              name="emailId"
+                              value={formData.emailId}
+                              onChange={this.handleInputChange}
+                            />
+                          </div>
+                          <div className="col-md-12">
+                            <Input
+                              type="text"
+                              label="Mobile Number"
+                              name="phoneNumber"
+                              value={formData.phoneNumber}
                               onChange={this.handleInputChange}
                             />
                           </div>
@@ -485,7 +507,7 @@ class TempForm extends Component {
                                 const formData = this.state.formData;
                                 formData.resume = fileItem[0].filename;
                                 this.setState({
-                                  formData : formData
+                                  formData: formData
                                 });
                               }}>
                             </FilePond>

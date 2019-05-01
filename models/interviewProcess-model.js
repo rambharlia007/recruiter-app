@@ -111,6 +111,9 @@ const interviewProcessSchema = new Schema({
     },
     statusColor: {
       type: "String"
+    },
+    comments:{
+      type:"String"
     }
   },
   mdRound: {
@@ -128,6 +131,9 @@ const interviewProcessSchema = new Schema({
     },
     statusColor: {
       type: "String"
+    },
+    comments:{
+      type:"String"
     }
   },
   technicalRound: {

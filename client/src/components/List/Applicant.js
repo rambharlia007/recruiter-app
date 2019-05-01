@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-// import "datatables.net-dt/css/jquery.dataTables.min.css";
-// import "datatables.net-fixedheader-dt/css/fixedHeader.dataTables.min.css";
 import CommonService from "../../services/common";
 import { Bar } from "react-chartjs-2";
 import moment from "moment";
+import axios from "axios";
 import "daterangepicker/daterangepicker.css";
 
 import keys from "../../config/keys";
@@ -12,64 +11,6 @@ var $ = require("jquery");
 require("datatables.net");
 require("daterangepicker");
 
-const data = {
-  labels: ["Nidhin", "Ram", "Vashist", "Puneeth", "Kamban", "Vibha", "R-1"],
-  datasets: [
-    {
-      type: "bar",
-      label: "Application Processed",
-      data: [200, 185, 590, 621, 250, 400, 95],
-      fill: false,
-      backgroundColor: "#71B37C",
-      borderColor: "#71B37C",
-      hoverBackgroundColor: "#71B37C",
-      hoverBorderColor: "#71B37C",
-      yAxisID: "y-axis-1"
-    }
-  ]
-};
-
-const data1 = {
-  labels: [
-    "Thiruekamban",
-    "Ram",
-    "Puneeth",
-    "Jagmeet Singh",
-    "Vashist",
-    "Abhinav",
-    "Guest"
-  ],
-  datasets: [
-    {
-      type: "bar",
-      label: "Interviewer Count",
-      data: [100, 150, 75, 1, 250, 125, 10],
-      fill: false,
-      backgroundColor: "#71B37C",
-      borderColor: "#71B37C",
-      hoverBackgroundColor: "#71B37C",
-      hoverBorderColor: "#71B37C",
-      yAxisID: "y-axis-1"
-    }
-  ]
-};
-
-const data2 = {
-  labels: ["Approved", "Rejected", "OnHold"],
-  datasets: [
-    {
-      type: "bar",
-      label: "Approved/Rejected count",
-      data: [150, 250, 50],
-      fill: false,
-      backgroundColor: "#71B37C",
-      borderColor: "#71B37C",
-      hoverBackgroundColor: "#71B37C",
-      hoverBorderColor: "#71B37C",
-      yAxisID: "y-axis-1"
-    }
-  ]
-};
 
 const options = {
   responsive: true,
@@ -110,9 +51,92 @@ class Applicant extends Component {
     this.common = new CommonService();
     this.state = {
       start: moment().subtract(29, "days"),
-      end: moment()
+      end: moment(),
+      applicationByRecruiterData: {},
+      applicationByInterviewerData: {},
+      applicationByStatusData: {}
     };
   }
+
+  getGraphBaseData(data, labels, name) {
+    return {
+      labels: labels,
+      datasets: [
+        {
+          type: "bar",
+          label: name,
+          data: data,
+          fill: false,
+          backgroundColor: "#71B37C",
+          borderColor: "#71B37C",
+          hoverBackgroundColor: "#71B37C",
+          hoverBorderColor: "#71B37C",
+          yAxisID: "y-axis-1"
+        }
+      ]
+    };
+  }
+
+  applicationCountByRecruiter() {
+    var self = this;
+    var labels = [];
+    var data = [];
+    axios
+      .get(`/applicationByRecruiter`)
+      .then(function (response) {
+        response.data.forEach(element => {
+          labels.push(element._id);
+          data.push(element.count);
+        });
+        const graphData = self.getGraphBaseData(data, labels, "Application processed by recruiter")
+        self.setState({ applicationByRecruiterData: graphData });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  applicationCountByInterviewer() {
+    var self = this;
+    var labels = [];
+    var data = [];
+    axios
+      .get(`/applicationByInterviewer`)
+      .then(function (response) {
+        var responseData = response.data;
+        for (var element in responseData) {
+          if (element !== "null") {
+            labels.push(element);
+            data.push(responseData[element]);
+          }
+        }
+        const graphData = self.getGraphBaseData(data, labels, "Application processed by interviewer")
+        self.setState({ applicationByInterviewerData: graphData });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  applicationCountByStatus() {
+    var self = this;
+    var labels = [];
+    var data = [];
+    axios
+      .get(`/applicationByStatus`)
+      .then(function (response) {
+        response.data.forEach(element => {
+          labels.push(element._id);
+          data.push(element.count);
+        });
+        const graphData = self.getGraphBaseData(data, labels, "Application Status")
+        self.setState({ applicationByStatusData: graphData });
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
   componentDidMount() {
     if (this.common.isTokenExpired()) alert("Token expired");
     else {
@@ -134,27 +158,42 @@ class Applicant extends Component {
         },
         columns: [
           {
+            data: "status",
+            render: function (data, type, row, meta) {
+              var val = "orange";
+              if (data === "approved")
+                val = "green";
+              else if (data === "rejected")
+                val = "red"
+              else if (data === "onhold")
+                val = "lightgreen"
+              return `<span class="dot ${val}"></span>`;
+            }
+          },
+          {
             data: "name",
             render: function (data, type, row, meta) {
-              return `<span><a href="${window.location.origin}/new/process?id=${
+              return `<span><a style="text-decoration: underline;" href="${window.location.origin}/new/process?id=${
                 row._id
                 }&rid=${row.recruiterId}">${data}</a></span>`;
             }
           },
+          { data: "emailId" },
+          { data: "phoneNumber" },
           { data: "recruiter" },
           { data: "totalExperience" },
           { data: "organisation" },
           { data: "designation" },
-          { data: "skillSet" },
           { data: "minNoticePeriod" },
           {
-            width:"30%",
+            // width: "30%",
             data: "resume",
             render: function (data, type, row, meta) {
               return `<span><a style="text-overflow: ellipsis;" target="_blank" href="${keys.server}/public/${
                 row.resume}">${data}</a></span>`;
             }
-          },
+          }
+
         ],
         lengthMenu: [[15, 20, 25, 30, 100], [15, 20, 25, 30, 100]]
       });
@@ -187,6 +226,11 @@ class Applicant extends Component {
       );
 
       this.cb(this.state.start, this.state.end);
+
+      this.applicationCountByRecruiter();
+      this.applicationCountByInterviewer();
+      this.applicationCountByStatus();
+
     }
   }
 
@@ -233,21 +277,21 @@ class Applicant extends Component {
             <div className="col-md-4 pb10">
               <div className="card">
                 <div className="card-body">
-                  <Bar data={data} options={options} />
+                  <Bar data={this.state.applicationByRecruiterData} options={options} />
                 </div>
               </div>
             </div>
             <div className="col-md-4 pb10">
               <div className="card">
                 <div className="card-body">
-                  <Bar data={data1} options={options} />
+                  <Bar data={this.state.applicationByInterviewerData} options={options} />
                 </div>
               </div>
             </div>
             <div className="col-md-4 pb10">
               <div className="card">
                 <div className="card-body">
-                  <Bar data={data2} options={options} />
+                  <Bar data={this.state.applicationByStatusData} options={options} />
                 </div>
               </div>
             </div>
@@ -261,14 +305,16 @@ class Applicant extends Component {
                   >
                     <thead>
                       <tr>
+                        <th>Status</th>
                         <th>Name</th>
+                        <th>Email</th>
+                        <th>Mobile</th>
                         <th>Recruiter</th>
                         <th>Experience</th>
                         <th>Organisation</th>
                         <th>Designation</th>
-                        <th>Skills</th>
                         <th>NoticePeriod</th>
-                        <th>resume</th>
+                        <th>Resume</th>
                       </tr>
                     </thead>
                   </table>{" "}

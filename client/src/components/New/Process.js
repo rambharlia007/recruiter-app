@@ -20,16 +20,6 @@ const roundType = {
   presentationEvaluationRound: 6
 };
 
-const mdCdlViewModed = {
-  isEditable: "",
-  isVisible: false,
-  name: "",
-  assignedTo: "",
-  bgColor: "bg-grey",
-  status: "start",
-  statusColor: "yellow"
-};
-
 const codeEvaluationRoundData = {
   comments: "",
   technologies: [
@@ -42,6 +32,7 @@ const codeEvaluationRoundData = {
   isVisible: false,
   name: "Code evaluation round",
   assignedTo: "",
+  assignedId: "",
   rating: 0,
   bgColor: "",
   status: "start",
@@ -65,6 +56,7 @@ const fitmentEvaluationRoundData = {
   isVisible: true,
   name: "Fitment evaluation round",
   assignedTo: "",
+  assignedId: "",
   rating: 0,
   bgColor: "bg-grey",
   status: "start",
@@ -103,7 +95,7 @@ const presentationRoundData = {
   isEditable: false,
   isVisible: false,
   name: "Presentation evaluation round",
-  assignedTo: "",
+  assignedId: "",
   rating: 0,
   bgColor: "",
   status: "start",
@@ -139,6 +131,20 @@ class Process extends Component {
     };
   }
 
+  getMdCdlViewModel() {
+    return {
+      isEditable: "",
+      isVisible: false,
+      name: "",
+      comments: "",
+      assignedTo: "",
+      bgColor: "bg-grey",
+      status: "start",
+      statusColor: "yellow",
+      assignedId: ""
+    };
+  }
+
   componentDidMount() {
     const values = queryString.parse(this.props.location.search);
     var self = this;
@@ -146,11 +152,11 @@ class Process extends Component {
       .get(`/user`, {
         headers: this.common.getTokenHeader()
       })
-      .then(function(response) {
+      .then(function (response) {
         self.setState({ interviewers: response.data });
         self.authenticateFitmentEvaluationRound();
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
 
@@ -158,10 +164,10 @@ class Process extends Component {
       .get(`/interviewprocess/${values.id}`, {
         headers: this.common.getTokenHeader()
       })
-      .then(function(response) {
+      .then(function (response) {
         self.prefillFormData(response.data);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         alert("fail");
         console.log(error);
       });
@@ -172,6 +178,8 @@ class Process extends Component {
     var techData = [];
     var codeEvaluationRound = null;
     var presentationEvaluationRound = null;
+    var cdlRound = null;
+    var mdRound = null;
     if (data && data.fitmentEvaluationRound) {
       fitmentData = this.getFitmentPrefillData(data.fitmentEvaluationRound);
     }
@@ -188,15 +196,40 @@ class Process extends Component {
         data.presentationEvaluationRound
       );
     }
+    if (data && data.cdlRound) {
+      cdlRound = this.getCdlAndMdPrefillData(
+        data.cdlRound
+      );
+    }
+    if (data && data.mdRound) {
+      mdRound = this.getCdlAndMdPrefillData(
+        data.mdRound
+      );
+    }
     this.setState({
       fitmentEvaluationRound: fitmentData,
       techData: techData,
       codeEvaluationRound: codeEvaluationRound,
       presentationEvaluationRound: presentationEvaluationRound,
+      cdlRound: cdlRound,
+      mdRound: mdRound,
       showLoader: false
     });
   }
-
+  getCdlAndMdPrefillData(data) {
+    const x = this.getMdCdlViewModel();
+    x.isEditable = data.assignedId == this.state.currentUserId;
+    x.disableClass = x.isEditable ? "" : "div-disable";
+    x.isVisible = false;
+    x.name = data.name;
+    x.assignedTo = data.assignedTo;
+    x.assignedId = data.assignedId;
+    x.bgColor = "",
+      x.status = data.status;
+    x.statusColor = data.statusColor;
+    x.comments = data.comments;
+    return x;
+  }
   getPresentationEvaluationPrefillData(data) {
     const x = presentationRoundData;
     x.assignedTo = data.assignedTo;
@@ -291,10 +324,10 @@ class Process extends Component {
     const values = queryString.parse(this.props.location.search);
     var recruiterId = values.rid;
     var intervieweeId = values.id;
-    var recuiter = this.getUserById(recruiterId);
-    data.assignedTo = recuiter.username;
-    data.assignedId = recuiter._id;
-    data.isEditable = recuiter._id == this.state.currentUserId;
+    var recruiter = this.getUserById(recruiterId);
+    data.assignedTo = recruiter.username;
+    data.assignedId = recruiter._id;
+    data.isEditable = recruiter._id == this.state.currentUserId;
     data.disableClass = data.isEditable ? "" : "div-disable";
     this.setState({
       fitmentEvaluationRound: data,
@@ -312,7 +345,7 @@ class Process extends Component {
     data.disableClass = data.isEditable ? "" : "div-disable";
     data.assignedId = this.state.assignedId;
     data.isVisible = false;
-    this.setState({ codeEvaluationRound: data });
+    this.setState({ codeEvaluationRound: data }, this.saveData);
   }
 
   addNewRound() {
@@ -332,25 +365,25 @@ class Process extends Component {
 
   addCdlEvaluationRound() {
     var currentInterviewer = this.getCurrentAssignedInterviewer();
-    const data = { ...mdCdlViewModed };
+    const data = this.getMdCdlViewModel();
     data.assignedTo = currentInterviewer.username;
     data.isEditable = currentInterviewer._id == this.state.currentUserId;
     data.disableClass = data.isEditable ? "" : "div-disable";
     data.assignedId = this.state.assignedId;
     data.isVisible = false;
     data.name = "CDL Evaluation Round";
-    this.setState({ cdlRound: data });
+    this.setState({ cdlRound: data }, this.saveData);
   }
   addMdEvaluationRound() {
     var currentInterviewer = this.getCurrentAssignedInterviewer();
-    const data = { ...mdCdlViewModed };
+    const data = this.getMdCdlViewModel();
     data.assignedTo = currentInterviewer.username;
     data.isEditable = currentInterviewer._id == this.state.currentUserId;
     data.disableClass = data.isEditable ? "" : "div-disable";
     data.assignedId = this.state.assignedId;
     data.isVisible = false;
     data.name = "MD Evaluation Round";
-    this.setState({ mdRound: data });
+    this.setState({ mdRound: data }, this.saveData);
   }
   addPresentationEvaluationRound() {
     var currentInterviewer = this.getCurrentAssignedInterviewer();
@@ -360,7 +393,7 @@ class Process extends Component {
     data.disableClass = data.isEditable ? "" : "div-disable";
     data.assignedId = this.state.assignedId;
     data.isVisible = false;
-    this.setState({ presentationEvaluationRound: data });
+    this.setState({ presentationEvaluationRound: data }, this.saveData);
   }
 
   getCurrentAssignedInterviewer() {
@@ -393,7 +426,7 @@ class Process extends Component {
     newTechnicalData.name = `TechnicalRound ${this.state.technicalRound.length +
       1}`;
     technicalRounds.push(newTechnicalData);
-    this.setState({ technicalRound: technicalRounds });
+    this.setState({ technicalRound: technicalRounds }, this.saveData);
   }
 
   techCallback(data) {
@@ -408,6 +441,14 @@ class Process extends Component {
     this.setState({ codeEvaluationRound: data });
   }
 
+  mdCdlEvaluationCallback(data, roundTypeId) {
+    if (roundTypeId == roundType.cdlRound)
+      this.setState({ cdlRound: data });
+    else {
+      this.setState({ mdRound: data });
+    }
+  }
+
   saveCallback(data, type) {
     if (type == roundType.fitmentEvaluationRound) {
       this.setState({ fitmentEvaluationRound: data }, this.saveData);
@@ -417,19 +458,41 @@ class Process extends Component {
       this.setState({ codeEvaluationRound: data }, this.saveData);
     } else if (type == roundType.presentationEvaluationRound) {
       this.setState({ presentationEvaluationRound: data }, this.saveData);
+    } else if (type == roundType.cdlRound) {
+      this.setState({ cdlRound: data }, this.saveData);
+    } else if (type == roundType.mdRound) {
+      this.setState({ mdRound: data }, this.saveAndUpdateIntervieweeStatus);
     }
   }
 
+  saveAndUpdateIntervieweeStatus() {
+    this.saveData();
+    var self = this;
+    var data = {
+      status : this.state.mdRound.status
+    }
+    axios
+      .put(`/interviewee/${this.state.intervieweeId}`, data, {
+        headers: this.common.getTokenHeader()
+      })
+      .then(function (response) {
+        console.log("status update done")
+      })
+      .catch(function (error) {
+        alert("fail");
+        console.log(error);
+      });
+  }
   saveData() {
     var self = this;
     axios
       .post(`/interviewprocess`, this.state, {
         headers: this.common.getTokenHeader()
       })
-      .then(function(response) {
+      .then(function (response) {
         alert("saved succesfully");
       })
-      .catch(function(error) {
+      .catch(function (error) {
         alert("fail");
         console.log(error);
       });
@@ -790,12 +853,16 @@ class Process extends Component {
                   <MdCdlEvaluationRound
                     data={this.state.cdlRound}
                     saveCallback={this.saveCallback.bind(this)}
+                    mdCdlEvaluationCallback={this.mdCdlEvaluationCallback.bind(this)}
+                    roundTypeId={roundType.cdlRound}
                   />
                 )}
                 {this.state.mdRound && (
                   <MdCdlEvaluationRound
                     data={this.state.mdRound}
                     saveCallback={this.saveCallback.bind(this)}
+                    mdCdlEvaluationCallback={this.mdCdlEvaluationCallback.bind(this)}
+                    roundTypeId={roundType.mdRound}
                   />
                 )}
               </div>

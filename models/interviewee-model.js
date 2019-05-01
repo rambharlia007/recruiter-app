@@ -25,7 +25,13 @@ const intervieweeSchema = new Schema({
   maxNoticePeriod: Number,
   recruiter: String,
   recruiterId: String,
-  resume:String
+  resume: String,
+  status: {
+    type: String,
+    default: 'inprogress'
+  },
+  emailId: String,
+  phoneNumber: String
 });
 
 const Interviewee = mongoose.model("interviewee", intervieweeSchema);
