@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const moment = require("moment");
 
 const interviewProcessSchema = new Schema({
   fitmentEvaluationRound: {
@@ -112,8 +113,8 @@ const interviewProcessSchema = new Schema({
     statusColor: {
       type: "String"
     },
-    comments:{
-      type:"String"
+    comments: {
+      type: "String"
     }
   },
   mdRound: {
@@ -132,8 +133,8 @@ const interviewProcessSchema = new Schema({
     statusColor: {
       type: "String"
     },
-    comments:{
-      type:"String"
+    comments: {
+      type: "String"
     }
   },
   technicalRound: {
@@ -203,6 +204,10 @@ const interviewProcessSchema = new Schema({
   },
   intervieweeId: {
     type: "String"
+  },
+  createdAt: {
+    type: String,
+    default: moment().format("YYYY-MM-DD")
   }
 });
 
