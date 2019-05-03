@@ -180,7 +180,7 @@ class PresentationEvaluationRound extends Component {
                 aria-haspopup="true"
                 aria-expanded="false"
               >
-                Status
+                {this.state.status}
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <a

@@ -105,15 +105,12 @@ class Login extends Component {
       <div class="login-padding">
         <div class="row justify-content-center">
           <div class="col-md-4 align-self-center align-items-center">
-           
+
 
             <div class="card">
               <div class="card-body">
-
-                <h3 class="form-signin-heading">Devon</h3>
-
-                <small class="text-muted">Connect DevOn Recruiter App with your favorite social network</small>
-
+                <img className="custom-logo" src="../../favicon.ico" alt="" />
+                <div><small class="text-muted">Connect DevOn Recruiter App with your favorite social network</small></div>
                 <div className="col-md-12 pt15 pl0">
                   <GoogleLogin
                     clientId={keys.google.clientID}

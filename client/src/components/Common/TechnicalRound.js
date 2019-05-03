@@ -159,7 +159,7 @@ class TechnicalRound extends Component {
                         aria-haspopup="true"
                         aria-expanded="false"
                       >
-                        Status
+                        {row.status}
                       </button>
                       <div
                         class="dropdown-menu"

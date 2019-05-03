@@ -469,7 +469,7 @@ class Process extends Component {
     this.saveData();
     var self = this;
     var data = {
-      status : this.state.mdRound.status
+      status: this.state.mdRound.status
     }
     axios
       .put(`/interviewee/${this.state.intervieweeId}`, data, {
@@ -935,12 +935,15 @@ class Process extends Component {
                   </div>
                   <button
                     type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
                     className="btn btn-default btn-sm pull-right"
                     onClick={() => {
                       this.addNewRound();
                     }}
                   >
-                    Send Email
+                    add round
                   </button>
                 </form>
               </div>

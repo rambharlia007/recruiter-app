@@ -179,3 +179,9 @@ body {
 td{
   text-align: center !important
 }
+
+.custom-logo{
+  margin-bottom: 20px;
+    height: 80px;
+    width: 90%;
+}

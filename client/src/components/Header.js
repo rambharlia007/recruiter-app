@@ -45,6 +45,7 @@ class Header extends Component {
       <header className="header-pad">
         <Navbar style={bgPink} dark expand="md" scrolling fixed="top">
           <NavbarBrand href="/">
+          {/* <img src="../../favicon.ico" width="30" height="30" alt="" alt="" /> */}
             <strong>DevOn</strong>
           </NavbarBrand>
           <NavbarToggler onClick={this.onClick} />
