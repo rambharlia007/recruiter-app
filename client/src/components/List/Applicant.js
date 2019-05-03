@@ -97,7 +97,7 @@ class Applicant extends Component {
     var data = [];
     axios
       .get(this.getEndPoint("applicationByRecruiter"))
-      .then(function (response) {
+      .then(function(response) {
         response.data.forEach(element => {
           labels.push(element._id);
           data.push(element.count);
@@ -109,7 +109,7 @@ class Applicant extends Component {
         );
         self.setState({ applicationByRecruiterData: graphData });
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -120,7 +120,7 @@ class Applicant extends Component {
     var data = [];
     axios
       .get(this.getEndPoint("applicationByInterviewer"))
-      .then(function (response) {
+      .then(function(response) {
         var responseData = response.data;
         for (var element in responseData) {
           if (element !== "null") {
@@ -135,7 +135,7 @@ class Applicant extends Component {
         );
         self.setState({ applicationByInterviewerData: graphData });
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -146,7 +146,7 @@ class Applicant extends Component {
     var data = [];
     axios
       .get(this.getEndPoint("applicationByStatus"))
-      .then(function (response) {
+      .then(function(response) {
         response.data.forEach(element => {
           labels.push(element._id);
           data.push(element.count);
@@ -158,7 +158,7 @@ class Applicant extends Component {
         );
         self.setState({ applicationByStatusData: graphData });
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
   }
@@ -199,10 +199,10 @@ class Applicant extends Component {
         url: this.getEndPoint("protected"),
         type: "GET",
         headers: this.common.getTokenHeader(),
-        dataSrc: function (json) {
+        dataSrc: function(json) {
           return json;
         },
-        error: function (xhr, error) {
+        error: function(xhr, error) {
           if (xhr.status == 401) alert("Unauthorised user");
         }
       },
@@ -213,22 +213,22 @@ class Applicant extends Component {
       columns: [
         {
           data: "status",
-          render: function (data, type, row, meta) {
+          render: function(data, type, row, meta) {
             var val = "orange";
             if (data === "approved") val = "green";
             else if (data === "rejected") val = "red";
             else if (data === "onhold") val = "lightgreen";
-            return `<span class="dot ${val}" data-toggle="tooltip" data-placement="top" title="Tooltip on top"></span>`;
+            return `<span class="dot ${val}" data-toggle="tooltip" data-placement="top" title="${data}"></span>`;
           }
         },
         {
           data: "name",
-          render: function (data, type, row, meta) {
+          render: function(data, type, row, meta) {
             return `<span><a style="text-decoration: underline;" href="${
               window.location.origin
-              }/new/process?id=${row._id}&rid=${
+            }/new/process?id=${row._id}&rid=${
               row.recruiterId
-              }">${data}</a></span>`;
+            }">${data}</a></span>`;
           }
         },
         { data: "emailId" },
@@ -238,22 +238,25 @@ class Applicant extends Component {
         { data: "organisation" },
         { data: "designation" },
         { data: "minNoticePeriod" },
-        {
-          // width: "30%",
-          data: "resume",
-          render: function (data, type, row, meta) {
-            return `<span><a style="text-overflow: ellipsis;" target="_blank" href="${
-              keys.server
-              }/public/${row.resume}">${data}</a></span>`;
-          }
-        }
+        // {
+        //   // width: "30%",
+        //   data: "resume",
+        //   render: function(data, type, row, meta) {
+        //     return `<span><a style="text-overflow: ellipsis;" target="_blank" href="${
+        //       keys.server
+        //     }/public/${row.resume}">${data}</a></span>`;
+        //   }
+        // }
+        { data: "createdAt" }
       ],
-      lengthMenu: [[15, 20, 25, 30, 100], [15, 20, 25, 30, 100]]
+      lengthMenu: [[15, 20, 25, 30, 100], [15, 20, 25, 30, 100]],
+      initComplete: function(settings, json) {
+        $('[data-toggle="tooltip"]').tooltip();
+      }
     });
   }
 
   componentDidMount() {
-    $('[data-toggle="tooltip"]').tooltip();
     if (this.common.isTokenExpired()) alert("Token expired");
     else {
       this.setDateRangePicker();
@@ -270,8 +273,11 @@ class Applicant extends Component {
     $("#reportrange1 span").html(
       start.format("MMMM D, YYYY") + " - " + end.format("MMMM D, YYYY")
     );
-    if (this.tableRef)
-      this.tableRef.ajax.url(this.getEndPoint("protected")).load();
+    if (this.tableRef) {
+      this.tableRef.ajax.url(this.getEndPoint("protected")).load(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+      });
+    }
     this.applicationCountByRecruiter();
     this.applicationCountByInterviewer();
     this.applicationCountByStatus();
@@ -357,7 +363,7 @@ class Applicant extends Component {
                         <th>Organisation</th>
                         <th>Designation</th>
                         <th>NoticePeriod</th>
-                        <th>Resume</th>
+                        <th>Date</th>
                       </tr>
                     </thead>
                   </table>{" "}

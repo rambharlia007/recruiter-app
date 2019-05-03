@@ -138,7 +138,7 @@ class Process extends Component {
       name: "",
       comments: "",
       assignedTo: "",
-      bgColor: "bg-grey",
+      bgColor: "",
       status: "start",
       statusColor: "yellow",
       assignedId: ""
@@ -152,11 +152,11 @@ class Process extends Component {
       .get(`/user`, {
         headers: this.common.getTokenHeader()
       })
-      .then(function (response) {
+      .then(function(response) {
         self.setState({ interviewers: response.data });
         self.authenticateFitmentEvaluationRound();
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log(error);
       });
 
@@ -164,10 +164,10 @@ class Process extends Component {
       .get(`/interviewprocess/${values.id}`, {
         headers: this.common.getTokenHeader()
       })
-      .then(function (response) {
+      .then(function(response) {
         self.prefillFormData(response.data);
       })
-      .catch(function (error) {
+      .catch(function(error) {
         alert("fail");
         console.log(error);
       });
@@ -197,14 +197,10 @@ class Process extends Component {
       );
     }
     if (data && data.cdlRound) {
-      cdlRound = this.getCdlAndMdPrefillData(
-        data.cdlRound
-      );
+      cdlRound = this.getCdlAndMdPrefillData(data.cdlRound);
     }
     if (data && data.mdRound) {
-      mdRound = this.getCdlAndMdPrefillData(
-        data.mdRound
-      );
+      mdRound = this.getCdlAndMdPrefillData(data.mdRound);
     }
     this.setState({
       fitmentEvaluationRound: fitmentData,
@@ -224,8 +220,7 @@ class Process extends Component {
     x.name = data.name;
     x.assignedTo = data.assignedTo;
     x.assignedId = data.assignedId;
-    x.bgColor = "",
-      x.status = data.status;
+    (x.bgColor = ""), (x.status = data.status);
     x.statusColor = data.statusColor;
     x.comments = data.comments;
     return x;
@@ -442,8 +437,7 @@ class Process extends Component {
   }
 
   mdCdlEvaluationCallback(data, roundTypeId) {
-    if (roundTypeId == roundType.cdlRound)
-      this.setState({ cdlRound: data });
+    if (roundTypeId == roundType.cdlRound) this.setState({ cdlRound: data });
     else {
       this.setState({ mdRound: data });
     }
@@ -470,15 +464,15 @@ class Process extends Component {
     var self = this;
     var data = {
       status: this.state.mdRound.status
-    }
+    };
     axios
       .put(`/interviewee/${this.state.intervieweeId}`, data, {
         headers: this.common.getTokenHeader()
       })
-      .then(function (response) {
-        console.log("status update done")
+      .then(function(response) {
+        console.log("status update done");
       })
-      .catch(function (error) {
+      .catch(function(error) {
         alert("fail");
         console.log(error);
       });
@@ -489,10 +483,10 @@ class Process extends Component {
       .post(`/interviewprocess`, this.state, {
         headers: this.common.getTokenHeader()
       })
-      .then(function (response) {
+      .then(function(response) {
         alert("saved succesfully");
       })
-      .catch(function (error) {
+      .catch(function(error) {
         alert("fail");
         console.log(error);
       });
@@ -853,7 +847,9 @@ class Process extends Component {
                   <MdCdlEvaluationRound
                     data={this.state.cdlRound}
                     saveCallback={this.saveCallback.bind(this)}
-                    mdCdlEvaluationCallback={this.mdCdlEvaluationCallback.bind(this)}
+                    mdCdlEvaluationCallback={this.mdCdlEvaluationCallback.bind(
+                      this
+                    )}
                     roundTypeId={roundType.cdlRound}
                   />
                 )}
@@ -861,7 +857,9 @@ class Process extends Component {
                   <MdCdlEvaluationRound
                     data={this.state.mdRound}
                     saveCallback={this.saveCallback.bind(this)}
-                    mdCdlEvaluationCallback={this.mdCdlEvaluationCallback.bind(this)}
+                    mdCdlEvaluationCallback={this.mdCdlEvaluationCallback.bind(
+                      this
+                    )}
                     roundTypeId={roundType.mdRound}
                   />
                 )}
