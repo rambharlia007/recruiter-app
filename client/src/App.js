@@ -11,9 +11,11 @@ import { Redirect } from "react-router";
 import PrivateRoute from "./components/PrivateRoute";
 import CommonService from "./services/common";
 import Applicant from "./components/List/Applicant";
-import Test from "./components/List/Test";
+
 import Process from "./components/New/Process";
+import Job from "./components/New/Job";
 import Profile from "./components/List/Profile";
+import JobList from "./components/List/JobList.js";
 
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -89,6 +91,20 @@ class App extends Component {
                 isAuthenticated={this.state.isAuthenticated}
                 isAdmin={this.state.isAdmin}
                 component={Profile}
+              />
+               <PrivateRoute
+                exact
+                path="/List/opening"
+                isAuthenticated={this.state.isAuthenticated}
+                isAdmin={this.state.isAdmin}
+                component={JobList}
+              />
+               <PrivateRoute
+                exact
+                path="/new/opening"
+                isAuthenticated={this.state.isAuthenticated}
+                isAdmin={this.state.isAdmin}
+                component={Job}
               />
             </div>
           </main>
