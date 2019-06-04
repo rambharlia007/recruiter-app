@@ -81,7 +81,19 @@ app.get("/interviewer", (req, res) => {
     if (err) res.status(500).send("Internal server error");
     else {
       var data = users.map(d => {
-        return { username: d.username, _id: d._id };
+        return { username: d.username, _id: d._id, role: d.role };
+      });
+      res.status(200).send(data);
+    }
+  });
+});
+
+app.get("/recruiter", (req, res) => {
+  User.find({ role: "recruiter" }, function(err, users) {
+    if (err) res.status(500).send("Internal server error");
+    else {
+      var data = users.map(d => {
+        return { username: d.username, _id: d._id, role: d.role };
       });
       res.status(200).send(data);
     }

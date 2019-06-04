@@ -207,6 +207,7 @@ class Profile extends Component {
                     <option value="admin">admin</option>
                     <option value="public">public</option>
                     <option value="internal_user">internal_user</option>
+                    <option value="recruiter">recruiter</option>
                   </select>
                 </form>
               </div>
