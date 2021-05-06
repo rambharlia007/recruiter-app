@@ -33,7 +33,7 @@
     "react-google-login": "^3.2.1",
     "request": "^2.88.0",
     "socket.io": "^2.2.0",
-    "underscore": "^1.9.1",
+    "underscore": "^1.12.1",
     "validator": "^9.4.1"
   }
 }
