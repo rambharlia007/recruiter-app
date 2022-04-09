@@ -17,7 +17,7 @@
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.10",
     "mdbreact": "^4.6.1",
-    "moment": "^2.23.0",
+    "moment": "^2.29.2",
     "msal": "^0.2.4",
     "namor": "^1.0.1",
     "query-string": "^5.1.1",
